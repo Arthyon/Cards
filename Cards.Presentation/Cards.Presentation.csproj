@@ -157,6 +157,7 @@
     <Compile Include="Controllers\LobbyController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Core\GameTypeList.cs" />
+    <Compile Include="Core\HubBase.cs" />
     <Compile Include="Core\Initialization.cs" />
     <Compile Include="Core\Locate.cs" />
     <Compile Include="Core\StructureMapDependencyResolver.cs" />

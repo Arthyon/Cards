@@ -1,14 +1,14 @@
 ﻿using Cards.Messaging.Core;
 using Cards.Messaging.Endpoints;
 using Cards.Presentation.Common.Messages;
-using Microsoft.AspNet.SignalR;
+using Cards.Presentation.Core;
 using Microsoft.AspNet.SignalR.Hubs;
 
 
 namespace Cards.Presentation.Lobby
 {
     [HubName("LobbyHub")]
-    public class SignalRLobby : Hub, IMessageEndpoint
+    public class SignalRLobby : HubBase<SignalRLobby>, IMessageEndpoint
     {
   
         public bool CanHandleMessage(IDispatchMessage message)
@@ -19,7 +19,7 @@ namespace Cards.Presentation.Lobby
         public void HandleMessage(IDispatchMessage message)
         {
             var gameCreatedMessage = message as GameCreatedMessage;
-            Clients.All.addGameToList(gameCreatedMessage.CreatedGame);
+            Broadcast.Clients.All.addGameToList(gameCreatedMessage.CreatedGame);
         }
     }
 
