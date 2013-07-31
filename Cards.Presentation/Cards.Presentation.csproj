@@ -64,6 +64,9 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="SignalR">
+      <HintPath>..\packages\SignalR.Server.0.4.0.0\lib\net40\SignalR.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap, Version=2.6.4.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
@@ -155,13 +158,18 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LobbyController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Core\GameTypeList.cs" />
     <Compile Include="Core\Initialization.cs" />
     <Compile Include="Core\Locate.cs" />
     <Compile Include="Core\PresentationRegistry.cs" />
+    <Compile Include="Core\StructureMapDependencyResolver.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Lobby\GameTypeHubBase.cs" />
     <Compile Include="Lobby\SignalRLobby.cs" />
+    <Compile Include="PlanningPoker\PlanningPokerGame.cs" />
+    <Compile Include="PlanningPoker\PlanningPokerHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

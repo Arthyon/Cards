@@ -7,23 +7,23 @@ namespace Cards.Lobby.GameComponents
 {
     public abstract class Game
     {
-        protected GameConfiguration Configuration { get; set; }
+        public int MaxPlayers { get; protected set; }
         protected PlayerCollection PlayerCollection { get; set; }
 
         public Guid GameId { get; private set; }
         public GameStatus Status { get; protected set; }
         public string GameType { get; protected set; }
 
-        protected Game(string gameType, Action<IGameConfiguration> config)
+        protected Game(string gameType, string displayName, int maxPlayers)
         {
-            Configuration = new GameConfiguration();
+            
             PlayerCollection = new PlayerCollection();
 
             GameId = Guid.NewGuid();
             Status = GameStatus.WaitingForPlayers;
             GameType = gameType;
 
-            config(Configuration);
+            
         }
 
         public Maybe<Player> GetPlayer(Guid id)
@@ -38,9 +38,9 @@ namespace Cards.Lobby.GameComponents
 
         public Maybe<Player> AddPlayer(Player player)
         {
-            if(Status == GameStatus.WaitingForPlayers || (Status == GameStatus.InProgress && Configuration.PlayersCanJoinMidGame))
+            if(Status == GameStatus.WaitingForPlayers)
             {
-                if (PlayerCollection.PlayerCount < Configuration.MaxPlayers)
+                if (PlayerCollection.PlayerCount < MaxPlayers)
                 {
                     PlayerCollection.AddPlayer(player);
                     return new Maybe<Player>(player);
@@ -52,12 +52,10 @@ namespace Cards.Lobby.GameComponents
 
         public bool StartGame()
         {
-            if (Status == GameStatus.WaitingForPlayers && PlayerCollection.PlayerCount >= Configuration.MinPlayers)
-            {
+           
                 Status = GameStatus.InProgress;
                 return true;
-            }
-            return false;
+           
         }
 
         public bool EndGame()

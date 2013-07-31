@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Cards.Presentation.Core;
+using Microsoft.AspNet.SignalR;
 
 namespace Cards.Presentation
 {
@@ -13,6 +14,8 @@ namespace Cards.Presentation
     {
         protected void Application_Start()
         {
+            Initialization.Initialize();
+            
             RouteTable.Routes.MapHubs();
             AreaRegistration.RegisterAllAreas();
 
@@ -21,7 +24,7 @@ namespace Cards.Presentation
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             
-            Initialization.Initialize();
+            
 
         }
 

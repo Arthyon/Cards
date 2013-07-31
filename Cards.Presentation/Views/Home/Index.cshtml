@@ -1,9 +1,34 @@
-﻿<script>
+﻿
+<ul id="games">
+
+</ul>
+
+<button id="nyPlanning">Ny planning poker</button>
+
+<script>
      $(function() {
          var hub = $.connection.LobbyHub;
+
+         hub.client.updateGameList = function(games) {
+             var gameList = $("#games");
+             gameList.children().remove();
+             $.each(games, function(i, e) {
+                 gameList.append("<li>"+e.GameType+"</li>");
+             });
+         };
          
+
          $.connection.hub.start().done(function() {
-             hub.server.join("he");
+            
+
+             $("#nyPlanning").on('click', function () {
+                 var t = "PlanningPoker";
+                 var gametypeHub = $.connection[t];
+                 gametypeHub.server.createGame();
+             });
          });
+         
+         
      });
  </script>
+
