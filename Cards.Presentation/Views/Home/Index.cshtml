@@ -9,12 +9,11 @@
      $(function() {
          var hub = $.connection.LobbyHub;
 
-         hub.client.updateGameList = function(games) {
+         hub.client.addGameToList = function (game) {
              var gameList = $("#games");
-             gameList.children().remove();
-             $.each(games, function(i, e) {
-                 gameList.append("<li>"+e.GameType+"</li>");
-             });
+            
+                 gameList.append("<li>"+game.GameType+"</li>");
+           
          };
          
 

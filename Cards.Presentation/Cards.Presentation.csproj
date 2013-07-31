@@ -151,12 +151,14 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common\Messages\GameCreatedMessage.cs" />
+    <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LobbyController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Core\GameTypeList.cs" />
     <Compile Include="Core\Initialization.cs" />
     <Compile Include="Core\Locate.cs" />
-    <Compile Include="Core\PresentationRegistry.cs" />
     <Compile Include="Core\StructureMapDependencyResolver.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -169,7 +171,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <Content Include="Frontend\Layouts\game.html" />
+    <Content Include="Frontend\Layouts\lobby.html" />
+    <Content Include="Frontend\Scripts\main.js" />
+    <Content Include="Frontend\Scripts\min\main.min.js" />
+    <Content Include="Frontend\Styles\CSS\main.css" />
     <Content Include="Global.asax" />
+    <Content Include="Frontend\Styles\SASS\Libs\_normalize.scss" />
+    <Content Include="Frontend\Styles\SASS\main.scss" />
+    <Content Include="Frontend\Styles\SASS\Partials\_alpha.scss" />
+    <Content Include="Frontend\Styles\SASS\Partials\_defaults.scss" />
+    <Content Include="Frontend\Styles\SASS\Support\_mixins.scss" />
+    <Content Include="Frontend\Styles\SASS\Support\_variables.scss" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
@@ -203,6 +216,12 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
+    <Content Include="Views\Game\Index.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Lobby\Index.cshtml">
+      <SubType>Code</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -215,6 +234,10 @@
     <ProjectReference Include="..\Cards.Lobby\Cards.Lobby.csproj">
       <Project>{ce571707-fafb-414c-8791-031b8d0cfbc5}</Project>
       <Name>Cards.Lobby</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cards.Messaging\Cards.Messaging.csproj">
+      <Project>{70e6f4a8-2e4d-4d32-bf46-3170d6ad35d0}</Project>
+      <Name>Cards.Messaging</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
