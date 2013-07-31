@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Cards.Presentation.Core;
+using Cards.Presentation.Lobby;
 
 namespace Cards.Presentation.Controllers
 {
@@ -10,6 +8,7 @@ namespace Cards.Presentation.Controllers
     {
         public ActionResult Index()
         {
+            var lobby = Locate<ILobby>.Instance; 
             return View();
         }
     }

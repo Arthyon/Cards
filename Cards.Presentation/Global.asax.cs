@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Cards.Presentation.Core;
 
 namespace Cards.Presentation
 {
@@ -12,6 +13,7 @@ namespace Cards.Presentation
     {
         protected void Application_Start()
         {
+            RouteTable.Routes.MapHubs();
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
@@ -19,6 +21,8 @@ namespace Cards.Presentation
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             
+            Initialization.Initialize();
+
         }
 
 
