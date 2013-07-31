@@ -19,6 +19,13 @@
     show: function ($targets) {
       $targets.removeClass(app.behaviors.states.hidden).addClass(app.behaviors.states.shown);
     },
+    toggle: function ($target) {
+      if ($target.hasClass(app.behaviors.states.hidden)) {
+        app.behaviors.show($target);
+      } else {
+        app.behaviors.hide($target);
+      }
+    },
     init: function() {
       $('[data-shows]').on('click', function(event) {
         app.behaviors.show($($(this).data('shows')));
@@ -34,6 +41,10 @@
       });
       $('[data-deactivates]').on('click', function(event) {
         app.behaviors.deactivate($($(this).data('deactivates')));
+        event.preventDefault();
+      });
+      $('[data-toggles]').on('click', function(event) {
+        app.behaviors.toggle($($(this).data('toggles')));
         event.preventDefault();
       });
     }

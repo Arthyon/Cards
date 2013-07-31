@@ -4,6 +4,12 @@
 .lobby {
 	.actions {
 		@include cf;
+
+		margin-bottom: .25em;
+
+		&.tabs {
+			border-bottom: .25em solid $text-color;
+		}
 	}
 
 	.action {
@@ -31,12 +37,78 @@
 		display: none;
 	}
 
-	.game {
-		border-bottom: 1px solid $text-color;
-		padding: .25em;
+	.join {
+		.game {
+			border-bottom: 1px solid $text-color;
+			padding: .25em;
 
-		&:first-child {
-			border-top: 1px solid $text-color;
+			&:first-child {
+				border-top: 1px solid $text-color;
+			}
+		}
+	}
+
+	.gametype {
+		float: left;
+		padding-bottom: 50%;
+		position: relative;
+		width: 50%;
+			
+		&.none {
+			background-color: gray;
+		}
+			
+		&.bridge {
+			background-color: green;
+		}
+			
+		&.idiot {
+			background-color: turquoise;
+		}
+			
+		&.cah {
+			background-color: black;
+		}
+			
+		&.magic {
+			background-color: teal;
+		}
+			
+		&.munchkin {
+			background-color: brown;
+		}
+
+		&.planningpoker {
+			background-color: fuchsia;
+		}
+
+		.name {
+			bottom: 0;
+			color: $text-color-light;
+			display: block;
+			left: 0;
+			max-width: 100%;
+			position: absolute;
+			transition: font-size .15s ease-in-out;
+
+			.word {
+				background-color: rgba(0,0,0,.75);
+				display: block;
+				float: left;
+				padding: .25em;
+			}
+		}
+	}
+
+	.create {
+		.gametype {
+			cursor: pointer;
+
+			&:hover {
+				.name {
+					font-size: 1.2em;
+				}
+			}
 		}
 	}
 
@@ -51,20 +123,89 @@
 			padding: 0;
 		}
 
-		.spots {
-			float: right;
-		}
-
+		.spots,
+		.status,
 		.action {
 			float: right;
 			margin-left: .5em;
+		}
+
+		.full {
+			color: red;
+		}
+
+		.action {
 			padding: 0;
 			width: auto;
+
+			&[disabled] {
+				text-decoration: line-through;
+			}
 		}
 	}
 
 	.board {
-		max-height: 0;
-		overflow: hidden;	
+		margin-top: .25em;
+
+		&.hidden {
+			margin: 0;
+			max-height: 0;
+			overflow: hidden;
+		}
+
+		.main {
+			@include cf;
+		}
+
+		.owner {
+			float: right;
+			width: 50%;
+		}
+
+		.actions {
+			margin: .25em 0;
+			text-align: right;
+		}
+
+		.action {
+			display: inline;
+			float: none;
+			text-align: center;
+			width: auto;
+
+			&[disabled] {
+				text-decoration: line-through;
+			}
+		}
+
+		.players {
+			@include cf;
+
+			.player {
+				width: (100% / 3);
+			}
+		}
+
+		.player {
+			float: left;
+			overflow: hidden;
+			position: relative;
+
+			.avatar {
+				display: block;
+				width: 100%;
+			}
+
+			.name {
+				background-color: rgba(0,0,0,.75);
+				bottom: 0;
+				color: $text-color-light;
+				display: block;
+				left: 0;
+				max-width: 100%;
+				padding: .25em;
+				position: absolute;
+			}
+		}
 	}
 }

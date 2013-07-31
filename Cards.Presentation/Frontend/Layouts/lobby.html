@@ -10,25 +10,32 @@
   <script src="/Frontend/Scripts/min/main.min.js"></script>
 </head>
   <body class="lobby">
-    <div class="actions">
-      <button class="action tab active" id="join_tab" data-shows="#section_join" data-hides="#section_create" data-activates="#join_tab" data-deactivates="#create_tab">Join</button>
-      <button class="action tab" id="create_tab" data-shows="#section_create" data-hides="#section_join" data-activates="#create_tab" data-deactivates="#join_tab">Create</button>
-    </div>
+    <header class="hi">
+      <div class="actions tabs">
+        <button class="action tab active" id="join_tab" data-shows="#section_join" data-hides="#section_create" data-activates="#join_tab" data-deactivates="#create_tab">Join</button>
+        <button class="action tab" id="create_tab" data-shows="#section_create" data-hides="#section_join" data-activates="#create_tab" data-deactivates="#join_tab">Create</button>
+      </div>
+    </header>
     <section class="section join" id="section_join">
       <h1 class="title">Join</h1>
       <ul class="games">
         <li class="game">
           <div class="bar">
-            <button class="name">Game Name</button>
+            <button class="name" data-toggles="#board_1">Awesome PP</button>
             <button class="action">Join</button>
-            <span class="spots">2/4</span>
+            <span class="spots">4/5</span>
           </div>
-          <div class="board hidden">
+          <div class="board hidden" id="board_1">
             <div class="main">
-              <div class="gametype">Game Type</div>
+              <div class="gametype planningpoker">
+                <span class="name">
+                  <span class="word">Planning</span>
+                  <span class="word">Poker</span>
+                </span>
+              </div>
               <div class="player owner">
                 <img class="avatar" src="http://lorempixel.com/200/200" alt="Game owner"/>
-                <span class="name">Kingston King</span>
+                <span class="name">Kingston</span>
               </div>
             </div>
             <div class="actions">
@@ -45,7 +52,78 @@
               </li>
               <li class="player">
                 <img class="avatar" src="http://lorempixel.com/200/200" alt="Fool"/>
-                <span class="name">Fool</span>
+                <span class="name">Jack</span>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="game">
+          <div class="bar">
+            <button class="name" data-toggles="#board_3">FFA</button>
+            <button class="action" disabled>Join</button>
+            <span class="spots full">3/3</span>
+          </div>
+          <div class="board hidden" id="board_3">
+            <div class="main">
+              <div class="gametype none">
+                <span class="name">
+                  <span class="word">No</span>
+                  <span class="word">Rules</span>
+                </span>
+              </div>
+              <div class="player owner">
+                <img class="avatar" src="http://lorempixel.com/100/100" alt="Game owner"/>
+                <span class="name">Kingston</span>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="action" disabled>Join</button>
+            </div>
+            <ul class="players">
+              <li class="player">
+                <img class="avatar" src="http://lorempixel.com/150/150" alt="Queen"/>
+                <span class="name">Queen</span>
+              </li>
+              <li class="player">
+                <img class="avatar" src="http://lorempixel.com/200/200" alt="Jester"/>
+                <span class="name">Jester</span>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="game">
+          <div class="bar">
+            <button class="name" data-toggles="#board_2">Cool Bridge</button>
+            <button class="action">Join</button>
+            <span class="spots">4/8</span>
+          </div>
+          <div class="board hidden" id="board_2">
+            <div class="main">
+              <div class="gametype bridge">
+                <span class="name">
+                  <span class="word">Bridge</span>
+                </span>
+              </div>
+              <div class="player owner">
+                <img class="avatar" src="http://lorempixel.com/250/250" alt="Game owner"/>
+                <span class="name">Kingston</span>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="action">Join</button>
+            </div>
+            <ul class="players">
+              <li class="player">
+                <img class="avatar" src="http://lorempixel.com/250/250" alt="Queen"/>
+                <span class="name">Queen</span>
+              </li>
+              <li class="player">
+                <img class="avatar" src="http://lorempixel.com/250/250" alt="Jester"/>
+                <span class="name">Jester</span>
+              </li>
+              <li class="player">
+                <img class="avatar" src="http://lorempixel.com/250/250" alt="Fool"/>
+                <span class="name">Jack</span>
               </li>
             </ul>
           </div>
@@ -54,9 +132,52 @@
     </section>
     <section class="section create hidden" id="section_create">
       <h1 class="title">Create</h1>
-      <ul class="games">
-        <li></li>
+      <ul class="gametypes">
+        <li class="gametype none">
+          <span class="name">
+            <span class="word">No</span>
+            <span class="word">Rules</span>
+          </span>
+        </li>
+        <li class="gametype bridge">
+          <span class="name">
+            <span class="word">Bridge</span>
+          </span>
+        </li>
+        <li class="gametype cah">
+          <span class="name">
+            <span class="word">Cards</span>
+            <span class="word">Against</span>
+            <span class="word">Humanity</span>
+          </span>
+        </li>
+        <li class="gametype idiot">
+          <span class="name">
+            <span class="word">Idiot</span>
+          </span>
+        </li>
+        <li class="gametype magic">
+          <span class="name">
+            <span class="word">Magic:</span>
+            <span class="word">The</span>
+            <span class="word">Gathering</span>
+          </span>
+        </li>
+        <li class="gametype munchkin">
+          <span class="name">
+            <span class="word">Munchkin</span>
+          </span>
+        </li>
+        <li class="gametype planningpoker">
+          <span class="name">
+            <span class="word">Planning</span>
+            <span class="word">Poker</span>
+          </span>
+        </li>
       </ul>
     </section>
+    <footer class="bye">
+      
+    </footer>
   </body>
 </html>

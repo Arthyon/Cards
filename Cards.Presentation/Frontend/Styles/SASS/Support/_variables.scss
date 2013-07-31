@@ -1,4 +1,5 @@
 ﻿$text-color: #333;
+$text-color-light: #eee;
 
 $active-button-color: green;
-$active-button-text-color: white;
+$active-button-text-color: $text-color-light;

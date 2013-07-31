@@ -373,6 +373,10 @@ table {
   box-sizing: border-box;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
@@ -396,12 +400,18 @@ figure img {
   width: 100%;
 }
 
+.lobby .actions {
+  margin-bottom: .25em;
+}
 .lobby .actions:before, .lobby .actions:after {
   content: " ";
   display: table;
 }
 .lobby .actions:after {
   clear: both;
+}
+.lobby .actions.tabs {
+  border-bottom: 0.25em solid #333333;
 }
 .lobby .action {
   background-color: transparent;
@@ -413,7 +423,7 @@ figure img {
 }
 .lobby .action.active {
   background-color: #333333;
-  color: white;
+  color: #eeeeee;
 }
 .lobby .section.hidden {
   max-height: 0;
@@ -422,12 +432,60 @@ figure img {
 .lobby .title {
   display: none;
 }
-.lobby .game {
+.lobby .join .game {
   border-bottom: 1px solid #333333;
   padding: .25em;
 }
-.lobby .game:first-child {
+.lobby .join .game:first-child {
   border-top: 1px solid #333333;
+}
+.lobby .gametype {
+  float: left;
+  padding-bottom: 50%;
+  position: relative;
+  width: 50%;
+}
+.lobby .gametype.none {
+  background-color: gray;
+}
+.lobby .gametype.bridge {
+  background-color: green;
+}
+.lobby .gametype.idiot {
+  background-color: turquoise;
+}
+.lobby .gametype.cah {
+  background-color: black;
+}
+.lobby .gametype.magic {
+  background-color: teal;
+}
+.lobby .gametype.munchkin {
+  background-color: brown;
+}
+.lobby .gametype.planningpoker {
+  background-color: fuchsia;
+}
+.lobby .gametype .name {
+  bottom: 0;
+  color: #eeeeee;
+  display: block;
+  left: 0;
+  max-width: 100%;
+  position: absolute;
+  transition: font-size .15s ease-in-out;
+}
+.lobby .gametype .name .word {
+  background-color: rgba(0, 0, 0, 0.75);
+  display: block;
+  float: left;
+  padding: .25em;
+}
+.lobby .create .gametype {
+  cursor: pointer;
+}
+.lobby .create .gametype:hover .name {
+  font-size: 1.2em;
 }
 .lobby .bar:before, .lobby .bar:after {
   content: " ";
@@ -443,16 +501,80 @@ figure img {
   margin: 0;
   padding: 0;
 }
-.lobby .bar .spots {
-  float: right;
-}
+.lobby .bar .spots,
+.lobby .bar .status,
 .lobby .bar .action {
   float: right;
   margin-left: .5em;
+}
+.lobby .bar .full {
+  color: red;
+}
+.lobby .bar .action {
   padding: 0;
   width: auto;
 }
+.lobby .bar .action[disabled] {
+  text-decoration: line-through;
+}
 .lobby .board {
+  margin-top: .25em;
+}
+.lobby .board.hidden {
+  margin: 0;
   max-height: 0;
   overflow: hidden;
+}
+.lobby .board .main:before, .lobby .board .main:after {
+  content: " ";
+  display: table;
+}
+.lobby .board .main:after {
+  clear: both;
+}
+.lobby .board .owner {
+  float: right;
+  width: 50%;
+}
+.lobby .board .actions {
+  margin: .25em 0;
+  text-align: right;
+}
+.lobby .board .action {
+  display: inline;
+  float: none;
+  text-align: center;
+  width: auto;
+}
+.lobby .board .action[disabled] {
+  text-decoration: line-through;
+}
+.lobby .board .players:before, .lobby .board .players:after {
+  content: " ";
+  display: table;
+}
+.lobby .board .players:after {
+  clear: both;
+}
+.lobby .board .players .player {
+  width: 33.33333%;
+}
+.lobby .board .player {
+  float: left;
+  overflow: hidden;
+  position: relative;
+}
+.lobby .board .player .avatar {
+  display: block;
+  width: 100%;
+}
+.lobby .board .player .name {
+  background-color: rgba(0, 0, 0, 0.75);
+  bottom: 0;
+  color: #eeeeee;
+  display: block;
+  left: 0;
+  max-width: 100%;
+  padding: .25em;
+  position: absolute;
 }
