@@ -43,23 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\ComponentInitialization.cs" />
+    <Compile Include="Core\LobbyRegistry.cs" />
     <Compile Include="GameComponents\Game.cs" />
     <Compile Include="GameComponents\GameCollection.cs" />
-    <Compile Include="Components\LobbyConfiguration.cs" />
     <Compile Include="Components\Maybe.cs" />
     <Compile Include="GameComponents\PlayerCollection.cs" />
     <Compile Include="GameComponents\GameConfiguration.cs" />
-    <Compile Include="Lobby.cs" />
+    <Compile Include="GameLobby.cs" />
+    <Compile Include="LobbyComponents\ILobby.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="LobbyComponents\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

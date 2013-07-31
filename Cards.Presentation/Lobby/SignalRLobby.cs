@@ -6,7 +6,7 @@ using Microsoft.AspNet.SignalR.Hubs;
 namespace Cards.Presentation.Lobby
 {
     [HubName("LobbyHub")]
-    public class SignalRLobby : Hub, ILobby
+    public class SignalRLobby : Hub
     {
         private readonly GameLobby _lobby;
 

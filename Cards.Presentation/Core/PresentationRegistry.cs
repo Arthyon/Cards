@@ -1,4 +1,5 @@
-﻿using Cards.Presentation.Lobby;
+﻿using Cards.Lobby.LobbyComponents;
+using Cards.Presentation.Lobby;
 using StructureMap.Configuration.DSL;
 
 namespace Cards.Presentation.Core
@@ -7,7 +8,7 @@ namespace Cards.Presentation.Core
     {
         public PresentationRegistry()
         {
-            For<ILobby>().Singleton().Use<SignalRLobby>();
+          
         }
     }
 }
