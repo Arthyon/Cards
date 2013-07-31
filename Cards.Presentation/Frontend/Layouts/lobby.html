@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Lobby</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1">
+  <link rel="stylesheet" href="/Frontend/Styles/CSS/main.css" />
+  <script src="/Scripts/jquery-2.0.3.min.js"></script>
+  <script src="/Frontend/Scripts/min/main.min.js"></script>
+</head>
+  <body class="lobby">
+    <div class="actions">
+      <button class="action tab active" id="join_tab" data-shows="#section_join" data-hides="#section_create" data-activates="#join_tab" data-deactivates="#create_tab">Join</button>
+      <button class="action tab" id="create_tab" data-shows="#section_create" data-hides="#section_join" data-activates="#create_tab" data-deactivates="#join_tab">Create</button>
+    </div>
+    <section class="section join" id="section_join">
+      <h1 class="title">Join</h1>
+      <ul class="games">
+        <li class="game">
+          <div class="bar">
+            <button class="name">Game Name</button>
+            <button class="action">Join</button>
+            <span class="spots">2/4</span>
+          </div>
+          <div class="board hidden">
+            <div class="main">
+              <div class="gametype">Game Type</div>
+              <div class="player owner">
+                <img class="avatar" src="http://lorempixel.com/200/200" alt="Game owner"/>
+                <span class="name">Kingston King</span>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="action">Join</button>
+            </div>
+            <ul class="players">
+              <li class="player">
+                <img class="avatar" src="http://lorempixel.com/200/200" alt="Queen"/>
+                <span class="name">Queen</span>
+              </li>
+              <li class="player">
+                <img class="avatar" src="http://lorempixel.com/200/200" alt="Jester"/>
+                <span class="name">Jester</span>
+              </li>
+              <li class="player">
+                <img class="avatar" src="http://lorempixel.com/200/200" alt="Fool"/>
+                <span class="name">Fool</span>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </section>
+    <section class="section create hidden" id="section_create">
+      <h1 class="title">Create</h1>
+      <ul class="games">
+        <li></li>
+      </ul>
+    </section>
+  </body>
+</html>

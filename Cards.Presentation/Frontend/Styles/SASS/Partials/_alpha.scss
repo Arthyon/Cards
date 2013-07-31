@@ -1,1 +1,70 @@
 ﻿@import '../Support/variables';
+@import '../Support/mixins';
+
+.lobby {
+	.actions {
+		@include cf;
+	}
+
+	.action {
+		background-color: transparent;
+		border: none;
+		float: left;
+		margin: 0;
+		padding: .25em 1em;
+		width: 50%;
+
+		&.active {
+			background-color: $text-color;
+			color: $active-button-text-color;
+		}
+	}
+
+	.section {
+		&.hidden {
+			max-height: 0;
+			overflow: hidden;
+		}
+	}
+
+	.title {
+		display: none;
+	}
+
+	.game {
+		border-bottom: 1px solid $text-color;
+		padding: .25em;
+
+		&:first-child {
+			border-top: 1px solid $text-color;
+		}
+	}
+
+	.bar {
+		@include cf;
+
+		.name {
+			background: none;
+			border: none;
+			float: left;
+			margin: 0;
+			padding: 0;
+		}
+
+		.spots {
+			float: right;
+		}
+
+		.action {
+			float: right;
+			margin-left: .5em;
+			padding: 0;
+			width: auto;
+		}
+	}
+
+	.board {
+		max-height: 0;
+		overflow: hidden;	
+	}
+}

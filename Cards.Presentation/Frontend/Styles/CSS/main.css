@@ -367,6 +367,23 @@ table {
   border-spacing: 0;
 }
 
+*:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+ul,
+ol {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
 figure {
   margin: 0;
   padding: 0;
@@ -377,4 +394,65 @@ figure img {
   margin: 0;
   padding: 0;
   width: 100%;
+}
+
+.lobby .actions:before, .lobby .actions:after {
+  content: " ";
+  display: table;
+}
+.lobby .actions:after {
+  clear: both;
+}
+.lobby .action {
+  background-color: transparent;
+  border: none;
+  float: left;
+  margin: 0;
+  padding: .25em 1em;
+  width: 50%;
+}
+.lobby .action.active {
+  background-color: #333333;
+  color: white;
+}
+.lobby .section.hidden {
+  max-height: 0;
+  overflow: hidden;
+}
+.lobby .title {
+  display: none;
+}
+.lobby .game {
+  border-bottom: 1px solid #333333;
+  padding: .25em;
+}
+.lobby .game:first-child {
+  border-top: 1px solid #333333;
+}
+.lobby .bar:before, .lobby .bar:after {
+  content: " ";
+  display: table;
+}
+.lobby .bar:after {
+  clear: both;
+}
+.lobby .bar .name {
+  background: none;
+  border: none;
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+.lobby .bar .spots {
+  float: right;
+}
+.lobby .bar .action {
+  float: right;
+  margin-left: .5em;
+  padding: 0;
+  width: auto;
+}
+.lobby .board {
+  max-height: 0;
+  overflow: hidden;
 }

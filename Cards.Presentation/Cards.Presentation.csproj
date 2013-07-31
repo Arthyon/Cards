@@ -166,7 +166,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <Content Include="Frontend\Layouts\lobby.html" />
+    <Content Include="Frontend\Styles\CSS\main.css" />
     <Content Include="Global.asax" />
+    <Content Include="Frontend\Styles\SASS\main.scss" />
+    <Content Include="Frontend\Styles\SASS\Partials\_alpha.scss" />
+    <Content Include="Frontend\Styles\SASS\Libs\_normalize.scss" />
+    <Content Include="Frontend\Styles\SASS\Partials\_defaults.scss" />
+    <Content Include="Frontend\Styles\SASS\Support\_variables.scss" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\angular-bootstrap-prettify.js" />
     <Content Include="Scripts\angular-bootstrap-prettify.min.js" />
