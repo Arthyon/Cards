@@ -8,25 +8,26 @@ namespace Cards.Lobby.GameComponents
     public abstract class Game
     {
         public int MaxPlayers { get; protected set; }
+        public int CurrentPlayers {get { return GetPlayers().Count; }}
         protected PlayerCollection PlayerCollection { get; set; }
 
-        public Guid GameId { get; private set; }
+        public Guid Id { get; private set; }
         public GameStatus Status { get; protected set; }
         public string GameType { get; protected set; }
 
         protected Game(string gameType, string displayName, int maxPlayers)
         {
-            
+            MaxPlayers = maxPlayers;
             PlayerCollection = new PlayerCollection();
 
-            GameId = Guid.NewGuid();
+            Id = Guid.NewGuid();
             Status = GameStatus.WaitingForPlayers;
             GameType = gameType;
 
             
         }
 
-        public Maybe<Player> GetPlayer(Guid id)
+        public Maybe<Player> GetPlayer(string id)
         {
             return PlayerCollection.GetPlayer(id);
         }

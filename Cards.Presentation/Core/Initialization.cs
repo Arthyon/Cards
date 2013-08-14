@@ -22,6 +22,8 @@ namespace Cards.Presentation.Core
 
                         });
                     i.For<IDependencyResolver>().Singleton().Add<StructureMapDependencyResolver>();
+                    i.For<IUserContext>().HybridHttpOrThreadLocalScoped().Add<UserContext>();
+                    i.For<IUserContextProvider>().Singleton().Use<UserContextProvider>();
                 }
 
 

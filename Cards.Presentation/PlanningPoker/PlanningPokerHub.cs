@@ -1,7 +1,8 @@
-﻿using Cards.Lobby.LobbyComponents;
+﻿using System;
+using System.Diagnostics;
+using Cards.Lobby.LobbyComponents;
 using Cards.Messaging.Dispatchers;
 using Cards.Presentation.Common.Messages;
-using Cards.Presentation.Core;
 using Cards.Presentation.Lobby;
 using Microsoft.AspNet.SignalR.Hubs;
 
@@ -10,23 +11,25 @@ namespace Cards.Presentation.PlanningPoker
 
 
     [HubName(GameTypes.PlanningPoker)]
-    public class PlanningPokerHub : HubBase<PlanningPokerHub>, IGameTypeHubBase<PlanningPokerGame>
+    public class PlanningPokerHub : GameTypeHubBase<PlanningPokerHub, PlanningPokerGame>
     {
-        private readonly ILobby _lobby;
+       
         private readonly IMessageDispatcher _dispatcher;
 
 
-        public PlanningPokerHub(ILobby lobby, IMessageDispatcher dispatcher)
+        public PlanningPokerHub(ILobby lobby, IMessageDispatcher dispatcher) : base(lobby)
         {
-            _lobby = lobby;
             _dispatcher = dispatcher;
         }
 
-        public PlanningPokerGame CreateGame()
+        
+        public override PlanningPokerGame CreateGame()
         {
             var game = new PlanningPokerGame(5);
-            _lobby.StartGame(game);
-            _dispatcher.DispatchMessage(new GameCreatedMessage(game));
+            Lobby.StartGame(game);
+            UserContext.JoinGame(game.Id);
+            var result = _dispatcher.DispatchMessage(new GameCreatedMessage(game));
+            Debug.Assert(result > 0);
 
             return game;
         }

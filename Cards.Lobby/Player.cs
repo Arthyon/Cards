@@ -1,17 +1,25 @@
 ﻿
 using System;
+using Cards.Lobby.GameComponents;
 
 namespace Cards.Lobby
 {
-    public abstract class Player
+    public class Player
     {
-        protected Player(string name)
+        public string Identifier { get; private set; }
+
+        public Player(string identifier, string name)
         {
+            Identifier = identifier;
             Name = name;
-            Id = Guid.NewGuid();
+
         }
 
-        public Guid Id { get; private set; }
+        public bool IsOnline { get; set; }
+
+
         public string Name { get; private set; }
+
+        public Game CurrentGame { get; set; }
     }
 }

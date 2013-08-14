@@ -152,15 +152,20 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Common\Messages\GameCreatedMessage.cs" />
+    <Compile Include="Controllers\ChooseNameController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LobbyController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Core\BaseController.cs" />
     <Compile Include="Core\GameTypeList.cs" />
     <Compile Include="Core\HubBase.cs" />
     <Compile Include="Core\Initialization.cs" />
+    <Compile Include="Core\IUserContext.cs" />
+    <Compile Include="Core\IUserContextProvider.cs" />
     <Compile Include="Core\Locate.cs" />
     <Compile Include="Core\StructureMapDependencyResolver.cs" />
+    <Compile Include="Core\UserContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -223,6 +228,8 @@
     <Content Include="Views\Lobby\Index.cshtml">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Views\Home\Game.cshtml" />
+    <Content Include="Views\ChooseName\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

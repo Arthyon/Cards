@@ -4,16 +4,23 @@
 </ul>
 
 <button id="nyPlanning">Ny planning poker</button>
-
+<p>Antall spillere i lobbyen: <em id="playerCount"></em></p>
 <script>
      $(function() {
          var hub = $.connection.LobbyHub;
 
          hub.client.addGameToList = function (game) {
              var gameList = $("#games");
-            
-                 gameList.append("<li>"+game.GameType+"</li>");
+             var node = $("<li onclick=\"\">" + game.GameType + ", players: " + game.CurrentPlayers + "/" + game.MaxPlayers + "</li>");
+             node.on('click', function() {
+                 joinGame(game.GameId, game.GameType);
+             });
+             gameList.append(node);
            
+         };
+         
+         hub.client.playersChanged = function (newNumber) {
+             $("#playerCount").text(newNumber);
          };
          
 
@@ -24,9 +31,21 @@
                  var t = "PlanningPoker";
                  var gametypeHub = $.connection[t];
                  gametypeHub.server.createGame();
+                 window.location.href = "/Home/Game";
              });
          });
          
+         function joinGame(id, type) {
+             var gametypeHub = $.connection[type];
+             var result = gametypeHub.server.joinGame(id);
+             if (result) {
+                 window.location.href = "/Home/Game";
+             } else {
+                 alert("failed");
+             }
+         }
+         
+        
          
      });
  </script>

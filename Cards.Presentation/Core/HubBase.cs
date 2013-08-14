@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 
 namespace Cards.Presentation.Core
@@ -7,9 +8,15 @@ namespace Cards.Presentation.Core
     {
         protected IHubContext Broadcast { get; private set; }
 
+        protected IUserContext UserContext {get { return _userContextProvider.UserContext; }}
+
+        private readonly IUserContextProvider _userContextProvider;
+
         protected HubBase()
         {
+            _userContextProvider = Locate<IUserContextProvider>.Instance;
             Broadcast = GlobalHost.ConnectionManager.GetHubContext<T>();
         }
+
     }
 }

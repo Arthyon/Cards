@@ -18,9 +18,9 @@ namespace Cards.Lobby.GameComponents
             return player;
         }
 
-        public Maybe<Player> GetPlayer(Guid id)
+        public Maybe<Player> GetPlayer(string id)
         {
-            return new Maybe<Player>(this.FirstOrDefault(player => player.Id == id));
+            return new Maybe<Player>(this.FirstOrDefault(player => player.Identifier == id));
         }
     }
 }

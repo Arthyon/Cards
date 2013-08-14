@@ -16,7 +16,7 @@ namespace Cards.Lobby.GameComponents
 
         public Maybe<Game> GetGame(Guid id)
         {
-            return new Maybe<Game>(this.FirstOrDefault(game => game.GameId == id));
+            return new Maybe<Game>(this.FirstOrDefault(game => game.Id == id));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Cards.Lobby
         public GameLobby()
         {
             GameCollection = new GameCollection();
-        }
+           }
 
         public Game StartGame(Game game)
         {

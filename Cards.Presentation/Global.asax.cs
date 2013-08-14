@@ -2,8 +2,9 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.Security;
+using Cards.Lobby;
 using Cards.Presentation.Core;
-using Microsoft.AspNet.SignalR;
 
 namespace Cards.Presentation
 {
@@ -27,6 +28,8 @@ namespace Cards.Presentation
             
 
         }
+
+     
 
 
     }

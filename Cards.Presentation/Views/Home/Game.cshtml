@@ -1,0 +1,19 @@
+﻿@model Cards.Lobby.GameComponents.Game
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>title</h2>
+<button id="cl">Klikk</button>
+
+<script>
+    var gametypeHub = $.connection["@Model.GameType"];
+    $.connection.hub.start().done(function() {
+        $("#cl").on('click', function () {
+            var str = gametypeHub.server.test();
+            alert(str);
+        });
+    });
+</script>
