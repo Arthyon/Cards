@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using System.Web.Providers.Entities;
 using System.Web.Security;
 using Cards.Lobby;
 using Cards.Lobby.Components;
@@ -23,12 +24,15 @@ namespace Cards.Presentation.Core
 
         public Player Player
         {
-            get { return _userManager.GetPlayer(HttpContext.Current.Session.SessionID).Result; } 
+            get
+            {
+                return _userManager.GetPlayer(HttpContext.Current.User.Identity.Name).Result;
+            } 
         }
 
         public string SessionId
         {
-            get { return HttpContext.Current.Session.SessionID; }
+            get { return HttpContext.Current.User.Identity.Name; }
         }
 
         public bool JoinGame(Guid gameId)

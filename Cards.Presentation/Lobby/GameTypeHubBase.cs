@@ -15,7 +15,7 @@ namespace Cards.Presentation.Lobby
             Lobby = lobby;
         }
 
-        public abstract TGame CreateGame();
+        public abstract void CreateGame();
 
         public bool JoinGame(string id)
         {

@@ -1,10 +1,6 @@
-﻿using System.Threading;
-using System.Web.Mvc;
-using System.Web.Security;
-using Cards.Lobby;
+﻿using System.Web.Mvc;
 using Cards.Lobby.Components;
 using Cards.Lobby.GameComponents;
-using Cards.Lobby.User;
 using Cards.Presentation.Core;
 
 namespace Cards.Presentation.Controllers
@@ -21,7 +17,7 @@ namespace Cards.Presentation.Controllers
             Maybe<Game> game = Locate<IUserContextProvider>.Instance.UserContext.CurrentGame;
             if (game.IsSuccessful)
             {
-                return View();
+                return View(game.Result.GameType);
             }
             return View();
         }

@@ -23,7 +23,7 @@ namespace Cards.Presentation.PlanningPoker
         }
 
         
-        public override PlanningPokerGame CreateGame()
+        public override void CreateGame()
         {
             var game = new PlanningPokerGame(5);
             Lobby.StartGame(game);
@@ -31,7 +31,7 @@ namespace Cards.Presentation.PlanningPoker
             var result = _dispatcher.DispatchMessage(new GameCreatedMessage(game));
             Debug.Assert(result > 0);
 
-            return game;
+            
         }
     }
 }

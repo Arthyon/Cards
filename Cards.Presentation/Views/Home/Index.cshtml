@@ -2,51 +2,64 @@
 <ul id="games">
 
 </ul>
+<ul id="gameTypes">
+</ul>
 
-<button id="nyPlanning">Ny planning poker</button>
 <p>Antall spillere i lobbyen: <em id="playerCount"></em></p>
 <script>
-     $(function() {
-         var hub = $.connection.LobbyHub;
+    $(function() {
+        var hub = $.connection.LobbyHub;
+        var apiUrl = "/api/LobbyApi/GetAvailableGameTypes";
+        hub.client.addGameToList = function(game) {
+            var gameList = $("#games");
+            var node = $("<li onclick=\"\">" + game.GameType + ", players: " + game.CurrentPlayers + "/" + game.MaxPlayers + "</li>");
+            node.on('click', function() {
+                joinGame(game.GameId, game.GameType);
+            });
+            gameList.append(node);
 
-         hub.client.addGameToList = function (game) {
-             var gameList = $("#games");
-             var node = $("<li onclick=\"\">" + game.GameType + ", players: " + game.CurrentPlayers + "/" + game.MaxPlayers + "</li>");
-             node.on('click', function() {
-                 joinGame(game.GameId, game.GameType);
-             });
-             gameList.append(node);
-           
-         };
-         
-         hub.client.playersChanged = function (newNumber) {
-             $("#playerCount").text(newNumber);
-         };
-         
+        };
 
-         $.connection.hub.start().done(function() {
-            
+        hub.client.playersChanged = function(newNumber) {
+            $("#playerCount").text(newNumber);
+        };
 
-             $("#nyPlanning").on('click', function () {
-                 var t = "PlanningPoker";
-                 var gametypeHub = $.connection[t];
-                 gametypeHub.server.createGame();
-                 window.location.href = "/Home/Game";
-             });
-         });
-         
-         function joinGame(id, type) {
-             var gametypeHub = $.connection[type];
-             var result = gametypeHub.server.joinGame(id);
-             if (result) {
-                 window.location.href = "/Home/Game";
-             } else {
-                 alert("failed");
-             }
-         }
-         
+
+        $.connection.hub.start().done(function() {
+            $.getJSON(apiUrl)
+                .done(function(data) {
+                    // On success, 'data' contains a list of products.
+                    $.each(data, function(key, item) {
+                        var btn = $("<button>" + item + "</button>");
+                        // Add a list item for the product.
+                        btn.appendTo($('#gameTypes'));
+
+                        btn.on('click', function() {
+                            var gametypeHub = $.connection[item];
+                            gametypeHub.server.createGame().done(function() {
+                                window.location.href = "/Home/Game";
+                            }).fail(function() {
+                                alert("Fail");
+                            });                            
+              
+                        
+                        });
+                    });
+                });
+        });
+
+        function joinGame(id, type) {
+            var gametypeHub = $.connection[type];
+            gametypeHub.server.joinGame(id)
+                .done(function() {
+                    window.location.href = "/Home/Game";
+                })
+                .fail(function() {
+                    alert("failed");
+                });
+
+        }         
         
          
-     });
- </script>
-
+    });
+</script>
