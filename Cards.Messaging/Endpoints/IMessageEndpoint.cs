@@ -4,7 +4,6 @@ namespace Cards.Messaging.Endpoints
 {
     public interface IMessageEndpoint
     {
-        bool CanHandleMessage(IDispatchMessage message);
-        void HandleMessage(IDispatchMessage message);
+        bool HandleMessage(IDispatchMessage message);
     }
 }

@@ -17,9 +17,9 @@ namespace Cards.Messaging.Core
                 //Scan all other assemblies starting with the solutions prefix for public classes inheriting from StructureMaps Registry-class
                 scanner.AssembliesFromApplicationBaseDirectory(
                     assembly => assembly.FullName.StartsWith("Cards."));
-                scanner.With(new SingletonConvention<IMessageEndpoint>());
-               
+                //scanner.With(new SingletonConvention<IMessageEndpoint>());
 
+                scanner.AddAllTypesOf<IMessageEndpoint>();
                 For<IMessageDispatcher>().Singleton().Use<BasicMessageDispatcher>();
             });
         }

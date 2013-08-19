@@ -17,10 +17,12 @@ namespace Cards.Messaging.Dispatchers
         public int DispatchMessage(IDispatchMessage message)
         {
             var count = 0;
-            foreach (var endpoint in Endpoints.Where(endpoint => endpoint.CanHandleMessage(message)))
+            foreach (var endpoint in Endpoints)
             {
-                count++;
-                endpoint.HandleMessage(message);
+                
+                var handled = endpoint.HandleMessage(message);
+                if(handled)
+                    count++;
             }
             return count;
         }

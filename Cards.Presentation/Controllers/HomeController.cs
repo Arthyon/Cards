@@ -17,9 +17,9 @@ namespace Cards.Presentation.Controllers
             Maybe<Game> game = Locate<IUserContextProvider>.Instance.UserContext.CurrentGame;
             if (game.IsSuccessful)
             {
-                return View(game.Result.GameType);
+                return View(game.Result);
             }
-            return View();
+            return View("Error");
         }
     }
 }

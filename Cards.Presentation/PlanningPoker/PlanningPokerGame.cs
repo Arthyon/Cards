@@ -6,6 +6,7 @@ namespace Cards.Presentation.PlanningPoker
     {
         public PlanningPokerGame(int maxPlayers) : base(GameTypes.PlanningPoker,"Planning Poker", maxPlayers)
         {
+
         }
     }
 }

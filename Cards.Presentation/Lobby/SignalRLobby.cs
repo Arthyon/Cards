@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using Cards.Lobby;
-using Cards.Lobby.LobbyComponents;
-using Cards.Lobby.User;
-using Cards.Messaging.Core;
+﻿using Cards.Messaging.Core;
 using Cards.Messaging.Endpoints;
 using Cards.Presentation.Common.Messages;
 using Cards.Presentation.Core;
@@ -16,66 +11,37 @@ namespace Cards.Presentation.Lobby
     public class SignalRLobby : HubBase<SignalRLobby>, IMessageEndpoint
     {
 
-        private static readonly ConcurrentDictionary<string, Player> ConnectedPlayers = new ConcurrentDictionary<string, Player>();
-        private readonly IUserManager _userManager;
-
-        public SignalRLobby(IUserManager userManager)
-        {
-            _userManager = userManager;
-        }
-        public bool CanHandleMessage(IDispatchMessage message)
-        {
-            return message is GameCreatedMessage;
-        }
-
-        public void HandleMessage(IDispatchMessage message)
+        public bool HandleMessage(IDispatchMessage message)
         {
             var gameCreatedMessage = message as GameCreatedMessage;
-            Broadcast.Clients.All.addGameToList(gameCreatedMessage.CreatedGame);
+            if (gameCreatedMessage != null)
+            {
+                Broadcast.Clients.All.addGameToList(gameCreatedMessage.CreatedGame);
+                return true;
+            }
+            var playerJoinedMessage = message as PlayerJoinedMessage;
+            if (playerJoinedMessage != null)
+            {
+                Broadcast.Clients.All.updatePlayerCount(playerJoinedMessage.Game.Id, playerJoinedMessage.Game.CurrentPlayers);
+            }
+
+            return false;
         }
 
-        public override System.Threading.Tasks.Task OnConnected()
+        protected override void UserConnected()
         {
-            if (!ConnectedPlayers.ContainsKey(Context.User.Identity.Name))
-            {
-                var player = _userManager.GetPlayer(Context.User.Identity.Name);
-                if (player.IsSuccessful)
-                {
-                    player.Result.IsOnline = true;
-                    ConnectedPlayers.TryAdd(Context.User.Identity.Name, player.Result);
-                    PlayersChanged();
-                }
-                
-            }
-            
-            return base.OnConnected();
+            PlayersChanged();
         }
 
-        public override System.Threading.Tasks.Task OnDisconnected()
+        protected override void UserDisconnected()
         {
-            var player = _userManager.GetPlayer(Context.User.Identity.Name);
-            if (player.IsSuccessful)
-            {
-                Player p;
-                if (ConnectedPlayers.TryRemove(Context.User.Identity.Name, out p))
-                {
-                    p.IsOnline = false;
-                    PlayersChanged();
-                }
-            }
-            
-            return base.OnDisconnected();
+            PlayersChanged();
         }
 
         public void PlayersChanged()
         {
             Broadcast.Clients.All.playersChanged(ConnectedPlayers.Count);
         }
-
-
-
     }
 
-   
-    
 }

@@ -152,6 +152,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Common\Messages\GameCreatedMessage.cs" />
+    <Compile Include="Common\Messages\PlayerJoinedMessage.cs" />
     <Compile Include="Controllers\ChooseNameController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

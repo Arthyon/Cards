@@ -1,19 +1,28 @@
-﻿@model Cards.Lobby.GameComponents.Game
+﻿@using Cards.Lobby.GameComponents
+@model Cards.Lobby.GameComponents.Game
 
 @{
     ViewBag.Title = "title";
-    Layout = "_Layout";
+   
 }
 
 <h2>title</h2>
-<button id="cl">Klikk</button>
+<button id="test">Klikk</button>
+<ul id="msg"></ul>
 
 <script>
     var gametypeHub = $.connection["@Model.GameType"];
-    $.connection.hub.start().done(function() {
-        $("#cl").on('click', function () {
-            var str = gametypeHub.server.test();
-            alert(str);
+    gametypeHub.client.messageSent = function (message) {
+        $("#msg").append("<li>" + message.User + ": " + message.Message + "</li>");
+    };
+    
+    $.connection.hub.start().done(function () {
+        
+        $("#test").on('click', function () {
+
+            gametypeHub.server.sendMessage("test");
+
         });
     });
 </script>
+

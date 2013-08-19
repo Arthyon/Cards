@@ -12,12 +12,16 @@
         var apiUrl = "/api/LobbyApi/GetAvailableGameTypes";
         hub.client.addGameToList = function(game) {
             var gameList = $("#games");
-            var node = $("<li onclick=\"\">" + game.GameType + ", players: " + game.CurrentPlayers + "/" + game.MaxPlayers + "</li>");
+            var node = $("<li id=\""+game.Id+"\" onclick=\"\">" + game.GameType + ", players: <span class=\"players\">" + game.CurrentPlayers + "</span>/" + game.MaxPlayers + "</li>");
             node.on('click', function() {
-                joinGame(game.GameId, game.GameType);
+                joinGame(game.Id, game.GameType);
             });
             gameList.append(node);
 
+        };
+
+        hub.client.updatePlayerCount = function(gameId, newCount) {
+            $("#" + gameId + " .players", "#games").text(newCount);
         };
 
         hub.client.playersChanged = function(newNumber) {
