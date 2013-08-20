@@ -1,7 +1,7 @@
 ﻿using Cards.Messaging.Core;
 using Cards.Messaging.Endpoints;
-using Cards.Presentation.Common.Messages;
 using Cards.Presentation.Core;
+using Cards.Presentation.Messaging.Messages;
 using Microsoft.AspNet.SignalR.Hubs;
 
 

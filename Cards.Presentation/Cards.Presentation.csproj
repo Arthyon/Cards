@@ -151,8 +151,8 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Common\Messages\GameCreatedMessage.cs" />
-    <Compile Include="Common\Messages\PlayerJoinedMessage.cs" />
+    <Compile Include="Messaging\Messages\GameCreatedMessage.cs" />
+    <Compile Include="Messaging\Messages\PlayerJoinedMessage.cs" />
     <Compile Include="Controllers\ChooseNameController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -172,6 +172,12 @@
     </Compile>
     <Compile Include="Lobby\GameTypeHubBase.cs" />
     <Compile Include="Lobby\SignalRLobby.cs" />
+    <Compile Include="Messaging\Aspects\ExceptionLoggingAspect.cs" />
+    <Compile Include="Messaging\Pipeline\Pipeline.cs" />
+    <Compile Include="Messaging\Pipeline\PipelineConfiguration.cs" />
+    <Compile Include="Messaging\Pipeline\Steps\GameCreated\AddGameToLobby.cs" />
+    <Compile Include="Messaging\Pipeline\Steps\GameCreated\BroadcastGameCreated.cs" />
+    <Compile Include="Messaging\Pipeline\Steps\GameCreated\PlayerJoinsGame.cs" />
     <Compile Include="PlanningPoker\PlanningPokerGame.cs" />
     <Compile Include="PlanningPoker\PlanningPokerHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -235,6 +241,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Common\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

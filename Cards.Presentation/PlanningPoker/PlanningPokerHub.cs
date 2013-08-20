@@ -3,8 +3,9 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Cards.Lobby.LobbyComponents;
 using Cards.Messaging.Dispatchers;
-using Cards.Presentation.Common.Messages;
 using Cards.Presentation.Lobby;
+using Cards.Presentation.Messaging.Messages;
+using Cards.Presentation.Messaging.Pipeline;
 using Microsoft.AspNet.SignalR.Hubs;
 
 namespace Cards.Presentation.PlanningPoker
@@ -14,21 +15,18 @@ namespace Cards.Presentation.PlanningPoker
     [HubName(GameTypes.PlanningPoker)]
     public class PlanningPokerHub : GameTypeHubBase<PlanningPokerHub, PlanningPokerGame>
     {
-        public PlanningPokerHub(ILobby lobby, IMessageDispatcher dispatcher) : base(lobby, dispatcher)
-        {
+        private readonly IPipelineConfiguration _pipelines;
 
+        public PlanningPokerHub(ILobby lobby, IMessageDispatcher dispatcher, IPipelineConfiguration pipelines) : base(lobby, dispatcher)
+        {
+            _pipelines = pipelines;
         }
 
         public override void CreateGame()
         {
             var game = new PlanningPokerGame(5);
-            Lobby.StartGame(game);
-           
-            UserContext.JoinGame(game.Id);
-            
-            var result = MessageDispatcher.DispatchMessage(new GameCreatedMessage(game));
-            Debug.Assert(result > 0);
 
+            _pipelines.GameCreatedPipeline.Execute(new GameCreatedMessage(game, UserContext.Player));
         }
 
         public void SendMessage(string message)
