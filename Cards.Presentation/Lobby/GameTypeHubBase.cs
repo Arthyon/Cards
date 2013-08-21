@@ -8,6 +8,8 @@ using Cards.Lobby.LobbyComponents;
 using Cards.Messaging.Dispatchers;
 using Cards.Presentation.Core;
 using Cards.Presentation.Messaging.Messages;
+using Cards.Presentation.Messaging.Pipeline;
+using Cards.Presentation.Messaging.Pipeline.Events;
 using Microsoft.AspNet.SignalR.Hubs;
 
 namespace Cards.Presentation.Lobby
@@ -15,33 +17,26 @@ namespace Cards.Presentation.Lobby
     public abstract class GameTypeHubBase<THub, TGame> : HubBase<THub> where TGame : Game where THub : IHub
     {
         protected readonly ILobby Lobby;
-        protected IMessageDispatcher MessageDispatcher { get; private set; }
+        protected readonly IPipelines Pipelines;
+        
 
-        protected GameTypeHubBase(ILobby lobby, IMessageDispatcher messageDispatcher)
+        protected GameTypeHubBase(ILobby lobby, IPipelines pipelines)
         {
             Lobby = lobby;
-            MessageDispatcher = messageDispatcher;
+            Pipelines = pipelines;
+            
         }
 
-        public abstract void CreateGame();
+        public abstract void CreateGame(TGame configuration);
 
         public bool JoinGame(string id)
         {
             var game = Lobby.GetGame(Guid.Parse(id));
-            if (game.IsSuccessful)
-            {
-                if (game.Result.AddPlayer(UserContext.Player).IsSuccessful)
-                {
-                    var i = MessageDispatcher.DispatchMessage(new PlayerJoinedMessage(game.Result, UserContext.Player));
-                    Debug.Assert(i > 0);
+            var player = UserContext.Player;
 
-                    Groups.Add(Context.ConnectionId, game.Result.Id.ToString());
+            Pipelines.PlayerJoinsGamePipeline.Execute(new PlayerJoinedGameEvent(game, player));
 
-                    return UserContext.JoinGame(Guid.Parse(id));
-                }
-                    
-            }
-            return false;
+            return true;
         }
 
         public List<Player> PlayersInGame()

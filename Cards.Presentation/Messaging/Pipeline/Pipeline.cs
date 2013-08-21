@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cards.Presentation.Messaging.Pipeline.Events;
 
 namespace Cards.Presentation.Messaging.Pipeline
 {
-    public class Pipeline<T>
+    public class Pipeline<T> where T : EventBase
     {
         private readonly List<Action<T>> _actions = new List<Action<T>>();
 

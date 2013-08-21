@@ -25,7 +25,7 @@ namespace Cards.Presentation.Core
                     i.For<IDependencyResolver>().Singleton().Add<StructureMapDependencyResolver>();
                     i.For<IUserContext>().HybridHttpOrThreadLocalScoped().Add<UserContext>();
                     i.For<IUserContextProvider>().Singleton().Use<UserContextProvider>();
-                    i.For<IPipelineConfiguration>().Singleton().Use<PipelineConfiguration>();
+                    i.For<IPipelines>().Singleton().Use<PipelineConfiguration>();
                 }
 
 

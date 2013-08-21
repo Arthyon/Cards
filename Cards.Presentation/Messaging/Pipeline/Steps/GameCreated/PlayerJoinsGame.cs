@@ -1,17 +1,18 @@
 ﻿using Cards.Lobby.GameComponents;
 using Cards.Presentation.Core;
 using Cards.Presentation.Messaging.Messages;
+using Cards.Presentation.Messaging.Pipeline.Events;
 
 namespace Cards.Presentation.Messaging.Pipeline.Steps.GameCreated
 {
     public class PlayerJoinsGame
     {
-        public PlayerJoinsGame(PlayerJoinedMessage msg)
+        public PlayerJoinsGame(PlayerJoinedGameEvent msg)
         {
-            Process(msg.Game);
+            Process(msg.Game.Result);
         }
 
-        public PlayerJoinsGame(GameCreatedMessage msg)
+        public PlayerJoinsGame(GameCreatedEvent msg)
         {
             Process(msg.CreatedGame);
         }

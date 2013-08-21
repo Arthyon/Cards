@@ -173,13 +173,21 @@
     <Compile Include="Lobby\GameTypeHubBase.cs" />
     <Compile Include="Lobby\SignalRLobby.cs" />
     <Compile Include="Messaging\Aspects\ExceptionLoggingAspect.cs" />
+    <Compile Include="Messaging\Pipeline\Events\EventBase.cs" />
+    <Compile Include="Messaging\Pipeline\Events\GameCreatedEvent.cs" />
+    <Compile Include="Messaging\Pipeline\Events\PlayerJoinedGameEvent.cs" />
+    <Compile Include="Messaging\Pipeline\Exceptions\GameException.cs" />
+    <Compile Include="Messaging\Pipeline\Exceptions\NotFoundException.cs" />
     <Compile Include="Messaging\Pipeline\Pipeline.cs" />
     <Compile Include="Messaging\Pipeline\PipelineConfiguration.cs" />
     <Compile Include="Messaging\Pipeline\Steps\GameCreated\AddGameToLobby.cs" />
     <Compile Include="Messaging\Pipeline\Steps\GameCreated\BroadcastGameCreated.cs" />
     <Compile Include="Messaging\Pipeline\Steps\GameCreated\PlayerJoinsGame.cs" />
-    <Compile Include="PlanningPoker\PlanningPokerGame.cs" />
-    <Compile Include="PlanningPoker\PlanningPokerHub.cs" />
+    <Compile Include="Messaging\Pipeline\Steps\PlayerJoinsGame\AddPlayerToGame.cs" />
+    <Compile Include="Messaging\Pipeline\Steps\PlayerJoinsGame\BroadcastPlayerJoinedMessage.cs" />
+    <Compile Include="Messaging\Pipeline\Steps\PlayerJoinsGame\DoesGameExist.cs" />
+    <Compile Include="Games\PlanningPoker\PlanningPokerGame.cs" />
+    <Compile Include="Games\PlanningPoker\PlanningPokerHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebAPI\LobbyApiController.cs" />
   </ItemGroup>

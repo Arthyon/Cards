@@ -40,7 +40,9 @@
 
                         btn.on('click', function() {
                             var gametypeHub = $.connection[item];
-                            gametypeHub.server.createGame().done(function() {
+                            var game = new PlanningPokerGame();
+                            game.MaxPlayers = 5;
+                            gametypeHub.server.createGame(game).done(function() {
                                 window.location.href = "/Home/Game";
                             }).fail(function() {
                                 alert("Fail");

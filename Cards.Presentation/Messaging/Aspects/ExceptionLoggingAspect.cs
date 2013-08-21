@@ -15,7 +15,7 @@ namespace Cards.Presentation.Messaging.Aspects
             {
                 Handle(input);
             }
-            catch (Exception ex)
+            catch
             {
                 //Log here
                     //Log.Error("*** ERROR ***: {0}", ex);
