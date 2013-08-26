@@ -1,8 +1,9 @@
-﻿using Cards.Lobby;
-using Cards.Presentation.Messaging.Aspects;
-using Cards.Presentation.Messaging.Messages;
+﻿using Cards.Messaging.Pipeline;
 using Cards.Presentation.Messaging.Pipeline.Events;
+using Cards.Presentation.Messaging.Pipeline.Events.PlayerEvents;
 using Cards.Presentation.Messaging.Pipeline.Steps.GameCreated;
+using Cards.Presentation.Messaging.Pipeline.Steps.PlayerConnectedToHub;
+using Cards.Presentation.Messaging.Pipeline.Steps.PlayerDisconnectedFromHub;
 using Cards.Presentation.Messaging.Pipeline.Steps.PlayerJoinsGame;
 
 namespace Cards.Presentation.Messaging.Pipeline
@@ -11,6 +12,8 @@ namespace Cards.Presentation.Messaging.Pipeline
     {
         Pipeline<GameCreatedEvent> GameCreatedPipeline { get; }
         Pipeline<PlayerJoinedGameEvent> PlayerJoinsGamePipeline { get; }
+        Pipeline<PlayerConnectedToHubEvent> PlayerConnectedToHub { get; } 
+        Pipeline<PlayerDisconnectedFromHubEvent> PlayerDisconnectedFromHub { get; } 
     }
 
     public class PipelineConfiguration : IPipelines
@@ -18,19 +21,32 @@ namespace Cards.Presentation.Messaging.Pipeline
         public PipelineConfiguration()
         {
             GameCreatedPipeline = new Pipeline<GameCreatedEvent>()
-                .Register(ev => new AddGameToLobby(ev))
-                .Register(ev => new PlayerJoinsGame(ev))
-                .Register(ev => new BroadcastGameCreated(ev));
+                .Register(AddGameToLobbyStep.AddGameToLobby)
+                .Register(PlayerJoinsGameStep.PlayerJoinsGame)
+                .Register(BroadcastGameCreatedStep.BroadcastGameCreated);
 
 
             PlayerJoinsGamePipeline = new Pipeline<PlayerJoinedGameEvent>()
-                .Register(ev => new DoesGameExist(ev))
-                .Register(ev => new AddPlayerToGame(ev))
-                .Register(ev => new BroadcastPlayerJoinedMessage(ev));
+                .Register(DoesGameExistStep.DoesGameExist)
+                .Register(AddPlayerToGameStep.AddPlayerToGame)
+                .Register(BroadcastPlayerJoinedMessageStep.BroadcastPlayerJoinedMessage);
+
+
+            PlayerConnectedToHub = new Pipeline<PlayerConnectedToHubEvent>()
+                .Register(AddPlayerToCurrentPlayersStep.AddPlayerToCurrentPlayers)
+                .Register(MarkPlayerAsOnlineStep.MarkPlayerAsOnline)
+                .Register(AddConnectionIdToPlayerStep.AddConnectionIdToPlayer);
+
+            PlayerDisconnectedFromHub = new Pipeline<PlayerDisconnectedFromHubEvent>()
+                .Register(RemovePlayerFromCurrentPlayersStep.RemovePlayerFromCurrentPlayers)
+                .Register(MarkPlayerAsOfflineStep.MarkPlayerAsOffline);
         }
 
         public Pipeline<GameCreatedEvent> GameCreatedPipeline { get; private set; }
 
         public Pipeline<PlayerJoinedGameEvent> PlayerJoinsGamePipeline { get; private set; }
+
+        public Pipeline<PlayerConnectedToHubEvent> PlayerConnectedToHub { get; private set; }
+        public Pipeline<PlayerDisconnectedFromHubEvent> PlayerDisconnectedFromHub { get; private set; } 
     }
 }

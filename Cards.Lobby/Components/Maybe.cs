@@ -19,5 +19,13 @@ namespace Cards.Lobby.Components
         {
             
         }
+
+
+
+        public static implicit operator Maybe<T>(T obj)
+        {
+            return new Maybe<T>(obj);
+        }
+
     }
 }

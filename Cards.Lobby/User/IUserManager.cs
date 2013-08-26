@@ -12,6 +12,6 @@ namespace Cards.Lobby.User
 
         bool RemovePlayer(Player player);
 
-        Maybe<Player> GetPlayer(string userId);
+        Maybe<Player> GetPlayer(string userId);        
     }
 }

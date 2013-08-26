@@ -1,7 +1,9 @@
-﻿using Cards.Messaging.Core;
+﻿using Cards.Lobby.User;
+using Cards.Messaging.Core;
 using Cards.Messaging.Endpoints;
 using Cards.Presentation.Core;
 using Cards.Presentation.Messaging.Messages;
+using Cards.Presentation.Messaging.Pipeline;
 using Microsoft.AspNet.SignalR.Hubs;
 
 
@@ -10,6 +12,9 @@ namespace Cards.Presentation.Lobby
     [HubName("LobbyHub")]
     public class SignalRLobby : HubBase<SignalRLobby>, IMessageEndpoint
     {
+        public SignalRLobby(IUserManager userManager, IPipelines pipelines) : base(userManager, pipelines)
+        {
+        }
 
         public bool HandleMessage(IDispatchMessage message)
         {

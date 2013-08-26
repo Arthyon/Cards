@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using Cards.Lobby.Components;
 
@@ -42,5 +44,6 @@ namespace Cards.Lobby.User
         {
             return new Maybe<Player>(_playerList.FirstOrDefault(a => a.Identifier == identifier));
         }
+
     }
 }

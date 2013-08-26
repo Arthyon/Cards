@@ -5,12 +5,14 @@
     ViewBag.Title = "title";
    
 }
-
+@Html.Partial("~/Games/"+Model.GameType+"/Game.cshtml", Model)
 <h2>title</h2>
 <button id="test">Klikk</button>
 <ul id="msg"></ul>
 
 <script>
+
+    
     var gametypeHub = $.connection["@Model.GameType"];
     gametypeHub.client.messageSent = function (message) {
         $("#msg").append("<li>" + message.User + ": " + message.Message + "</li>");

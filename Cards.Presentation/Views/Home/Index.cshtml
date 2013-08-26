@@ -1,4 +1,5 @@
-﻿
+﻿@using Cards.Presentation.Games.PlanningPoker
+
 <ul id="games">
 
 </ul>
@@ -9,16 +10,18 @@
 <script>
     $(function() {
         var hub = $.connection.LobbyHub;
-        var apiUrl = "/api/LobbyApi/GetAvailableGameTypes";
-        hub.client.addGameToList = function(game) {
+        var apiUrl = "/api/LobbyApi/";
+        
+        function addGameToList(game) {
             var gameList = $("#games");
-            var node = $("<li id=\""+game.Id+"\" onclick=\"\">" + game.GameType + ", players: <span class=\"players\">" + game.CurrentPlayers + "</span>/" + game.MaxPlayers + "</li>");
-            node.on('click', function() {
+            var node = $("<li id=\"" + game.Id + "\" onclick=\"\">" + game.GameType + ", players: <span class=\"players\">" + game.CurrentPlayers + "</span>/" + game.MaxPlayers + "</li>");
+            node.on('click', function () {
                 joinGame(game.Id, game.GameType);
             });
             gameList.append(node);
+        }
 
-        };
+        hub.client.addGameToList = addGameToList;
 
         hub.client.updatePlayerCount = function(gameId, newCount) {
             $("#" + gameId + " .players", "#games").text(newCount);
@@ -27,10 +30,22 @@
         hub.client.playersChanged = function(newNumber) {
             $("#playerCount").text(newNumber);
         };
+        
+        function joinGame(id, type) {
+            var gametypeHub = $.connection[type];
+            gametypeHub.server.joinGame(id)
+                .done(function () {
+                    window.location.href = "/Home/Game";
+                })
+                .fail(function () {
+                    alert("failed");
+                });
+
+        }
 
 
         $.connection.hub.start().done(function() {
-            $.getJSON(apiUrl)
+            $.getJSON(apiUrl + "GetAvailableGameTypes")
                 .done(function(data) {
                     // On success, 'data' contains a list of products.
                     $.each(data, function(key, item) {
@@ -40,9 +55,9 @@
 
                         btn.on('click', function() {
                             var gametypeHub = $.connection[item];
-                            var game = new PlanningPokerGame();
-                            game.MaxPlayers = 5;
-                            gametypeHub.server.createGame(game).done(function() {
+                            
+                            
+                            gametypeHub.server.createGame().done(function() {
                                 window.location.href = "/Home/Game";
                             }).fail(function() {
                                 alert("Fail");
@@ -52,19 +67,15 @@
                         });
                     });
                 });
+            $.getJSON(apiUrl + "GetAvailableGames")
+                .done(function (games) {
+                    $.each(games, function(i, game) {
+                        addGameToList(game);
+                    });
+                });
         });
 
-        function joinGame(id, type) {
-            var gametypeHub = $.connection[type];
-            gametypeHub.server.joinGame(id)
-                .done(function() {
-                    window.location.href = "/Home/Game";
-                })
-                .fail(function() {
-                    alert("failed");
-                });
-
-        }         
+               
         
          
     });

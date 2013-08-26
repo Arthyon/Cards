@@ -19,6 +19,7 @@ namespace Cards.Presentation.Controllers
         [HttpPost]
         public RedirectResult Login(string returnUrl, string userName)
         {
+            
             var player = new Player(Session.SessionID, userName);
             Locate<IUserManager>.Instance.AddPlayer(player);
 

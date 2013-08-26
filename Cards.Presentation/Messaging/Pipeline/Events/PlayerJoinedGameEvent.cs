@@ -1,6 +1,7 @@
 ﻿using Cards.Lobby;
 using Cards.Lobby.Components;
 using Cards.Lobby.GameComponents;
+using Cards.Messaging.Pipeline;
 
 namespace Cards.Presentation.Messaging.Pipeline.Events
 {
