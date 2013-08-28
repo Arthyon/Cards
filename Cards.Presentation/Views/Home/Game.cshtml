@@ -1,12 +1,7 @@
-﻿@using Cards.Lobby.GameComponents
-@model Cards.Lobby.GameComponents.Game
+﻿@model Cards.Lobby.GameComponents.Game
 
 @{
-    ViewBag.Title = "title";
-   
+  ViewBag.Title = "title";  
 }
-@Html.Partial("~/Games/"+Model.GameType+"/Game.cshtml", Model)
 
-
-
-
+@Html.Partial("~/Games/" + Model.GameType + "/Game.cshtml", Model)

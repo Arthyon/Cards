@@ -8,9 +8,6 @@ namespace Cards.Presentation.Controllers
 {
     public class ChooseNameController : Controller
     {
-        //
-        // GET: /ChooseName/
-
         public ActionResult Index(string returnUrl)
         {
             return View((object)returnUrl);
@@ -19,7 +16,6 @@ namespace Cards.Presentation.Controllers
         [HttpPost]
         public RedirectResult Login(string returnUrl, string userName)
         {
-            
             var player = new Player(Session.SessionID, userName);
             Locate<IUserManager>.Instance.AddPlayer(player);
 

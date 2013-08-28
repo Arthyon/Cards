@@ -1,15 +1,14 @@
 ﻿@model string
 
 @{
-    ViewBag.Title = "title";
-    Layout = null;
+  ViewBag.Title = "Choose Name";
+  Layout = null;
 }
 
-<h2>title</h2>
-@using (Html.BeginForm("Login","ChooseName"))
-
+<h2>Choose Name</h2>
+@using (Html.BeginForm("Login", "ChooseName"))
 {
-    <input type="text" name="userName" placeholder="Brukernavn"/>
-    <input type="hidden" value="@Model" name="returnUrl"/>
-    <input type="submit" value="Fortsett"></input>
+  <input type="text" name="userName" placeholder="User name" />
+  <input type="hidden" value="@Model" name="returnUrl"/>
+  <input type="submit" value="Continue" />
 }

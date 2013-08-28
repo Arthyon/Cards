@@ -1,5 +1,4 @@
-﻿
-namespace Cards.Lobby.Components
+﻿namespace Cards.Lobby.Components
 {
     public class Maybe<T>
     {
@@ -20,12 +19,9 @@ namespace Cards.Lobby.Components
             
         }
 
-
-
         public static implicit operator Maybe<T>(T obj)
         {
             return new Maybe<T>(obj);
         }
-
     }
 }
