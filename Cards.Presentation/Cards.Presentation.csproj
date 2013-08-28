@@ -151,6 +151,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Games\PlanningPoker\Objects\PlanningPokerCard.cs" />
     <Compile Include="Messaging\Messages\GameCreatedMessage.cs" />
     <Compile Include="Messaging\Messages\PlayerJoinedMessage.cs" />
     <Compile Include="Controllers\ChooseNameController.cs" />
@@ -185,7 +186,6 @@
     <Compile Include="Messaging\Pipeline\Steps\PlayerConnectedToHub\MarkPlayerAsOnlineStep.cs" />
     <Compile Include="Messaging\Pipeline\Steps\PlayerDisconnectedFromHub\MarkPlayerAsOfflineStep.cs" />
     <Compile Include="Messaging\Pipeline\Steps\PlayerDisconnectedFromHub\RemovePlayerFromCurrentPlayersStep.cs" />
-    <Compile Include="Messaging\Pipeline\Steps\PlayerJoinsGame\AddPlayerToGameStep.cs" />
     <Compile Include="Messaging\Pipeline\Steps\PlayerJoinsGame\BroadcastPlayerJoinedMessageStep.cs" />
     <Compile Include="Messaging\Pipeline\Steps\PlayerJoinsGame\DoesGameExistStep.cs" />
     <Compile Include="Games\PlanningPoker\PlanningPokerGame.cs" />

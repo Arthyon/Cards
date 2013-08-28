@@ -44,12 +44,16 @@ namespace Cards.Lobby.GameComponents
                 if (PlayerCollection.PlayerCount < MaxPlayers)
                 {
                     PlayerCollection.AddPlayer(player);
+                    PlayerAdded(player);
                     return new Maybe<Player>(player);
                 }
             }
 
             return new Maybe<Player>();
         }
+
+        protected abstract void PlayerAdded(Player player);
+    
 
         public bool StartGame()
         {

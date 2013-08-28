@@ -28,7 +28,7 @@ namespace Cards.Presentation.Messaging.Pipeline
 
             PlayerJoinsGamePipeline = new Pipeline<PlayerJoinedGameEvent>()
                 .Register(DoesGameExistStep.DoesGameExist)
-                .Register(AddPlayerToGameStep.AddPlayerToGame)
+                .Register(PlayerJoinsGameStep.PlayerJoinsGame)
                 .Register(BroadcastPlayerJoinedMessageStep.BroadcastPlayerJoinedMessage);
 
 

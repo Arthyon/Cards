@@ -1,5 +1,57 @@
 ﻿@inherits System.Web.Mvc.WebViewPage<Cards.Presentation.Games.PlanningPoker.PlanningPokerGame>
+<input type="checkbox" id="chkShowBoard"/><label for="chkShowBoard">Show board</label>
+<div id="board">
+    
+</div>
+
+Click a card to play it
+
+<div id="hand">
+    <ul id="cards">
+        
+    </ul>
+</div>
+<script>
+
+    $("#chkShowBoard").on('change', function() {
+        $("#board").toggle();
+    });
+
+    var gametypeHub = $.connection["@Model.GameType"];
 
 
-<p>hei</p>
-@Model.GameType
+    gametypeHub.client.boardStateUpdated = function(boardState) {
+        UpdateBoardState(boardState);
+    };
+
+    gametypeHub.client.newRound = function(roundState) {
+        $("#cards").empty();
+        $.each(roundState.Cards, function(i, e) {
+            var card = $("<li>"+e.Value+"</li>");
+            card.on('click', function() {
+                gametypeHub.server.playCard(e.Value).done(function() {
+                    $("#cards li").off('click');
+                    card.css("background-color", "#efefef");
+                }).fail(function() {
+                    alert("Fail");
+                });
+                
+            });
+            $("#cards").append(card);
+        });
+        UpdateBoardState(roundState.BoardState);
+    };
+    
+    function UpdateBoardState(boardState) {
+        $("#board").empty();
+        $.each(boardState.Players, function(i, e) {
+            $("#board").append("<p>Player:"+e.Name+", Card:"+e.Status+"</p>");
+        });
+    }
+
+
+    $.connection.hub.start().done(function () {
+        gametypeHub.server.requestCurrentState();
+
+    });
+</script>
