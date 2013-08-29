@@ -1,57 +1,86 @@
 ﻿@inherits System.Web.Mvc.WebViewPage<Cards.Presentation.Games.PlanningPoker.PlanningPokerGame>
-<input type="checkbox" id="chkShowBoard"/><label for="chkShowBoard">Show board</label>
-<div id="board">
-    
-</div>
-
-Click a card to play it
-
-<div id="hand">
-    <ul id="cards">
+         <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+<div id="playingArea">
+    <div id="preGame">
         
-    </ul>
+    </div>
+    <div id="inGame">
+        <input type="checkbox" id="chkShowBoard" data-bind="checked: boardIsVisible" /><label for="chkShowBoard">Show board</label>
+        <div id="board" data-bind="visible:boardIsVisible">
+            <ul data-bind="foreach: players">
+                <li><span data-bind="text:Name"></span> - <span data-bind="text:Status"></span></li>
+            </ul>
+        </div>
+
+        <p data-bind="visible: !cardChosen()">Click a card to play it</p>
+        <p data-bind="visible: cardChosen">You chose <span data-bind="text: chosenCard"></span></p>
+
+        <div id="hand">
+            <ul id="cards" data-bind="foreach: cards">
+                <li><span data-bind ="text: Value, click:$parent.playCard"></span></li>
+            </ul>
+        </div>
+    </div>
+    
+
 </div>
 <script>
 
-    $("#chkShowBoard").on('change', function() {
-        $("#board").toggle();
-    });
-
     var gametypeHub = $.connection["@Model.GameType"];
+    
 
+    var Model = function() {
+        var self = this;
+        
 
-    gametypeHub.client.boardStateUpdated = function(boardState) {
-        UpdateBoardState(boardState);
-    };
+        // ---------- Signal R -----------
+        function updateBoardState(boardState) {
+            self.players(boardState.Players);
+        }
 
-    gametypeHub.client.newRound = function(roundState) {
-        $("#cards").empty();
-        $.each(roundState.Cards, function(i, e) {
-            var card = $("<li>"+e.Value+"</li>");
-            card.on('click', function() {
-                gametypeHub.server.playCard(e.Value).done(function() {
-                    $("#cards li").off('click');
-                    card.css("background-color", "#efefef");
-                }).fail(function() {
+        gametypeHub.client.boardStateUpdated = function (boardState) {
+            updateBoardState(boardState);
+        };
+
+        gametypeHub.client.newRound = function (roundState) {
+            self.cards(roundState.Cards);
+            
+            updateBoardState(roundState.BoardState);
+        };
+        
+        // ------------- KO --------------
+        self.boardIsVisible = ko.observable(true);
+
+        self.cards = ko.observableArray();
+        self.players = ko.observableArray();
+
+        self.cardChosen = ko.observable(false);
+        self.chosenCard = ko.observable();
+        
+        self.playCard = function (card) {
+            if (!self.cardChosen()) {
+                gametypeHub.server.playCard(card.Value).done(function () {
+                    
+                    self.chosenCard(card.Value);
+                    self.cardChosen(true);
+                    
+                }).fail(function () {
                     alert("Fail");
                 });
-                
-            });
-            $("#cards").append(card);
+            }
+            
+        };
+        
+        
+        $.connection.hub.start().done(function () {
+            gametypeHub.server.requestCurrentState();
         });
-        UpdateBoardState(roundState.BoardState);
+        
     };
+
+    ko.applyBindings(new Model(), $("#playingArea")[0]);
     
-    function UpdateBoardState(boardState) {
-        $("#board").empty();
-        $.each(boardState.Players, function(i, e) {
-            $("#board").append("<p>Player:"+e.Name+", Card:"+e.Status+"</p>");
-        });
-    }
+   
 
-
-    $.connection.hub.start().done(function () {
-        gametypeHub.server.requestCurrentState();
-
-    });
 </script>
+

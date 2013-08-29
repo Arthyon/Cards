@@ -44,6 +44,8 @@ namespace Cards.Presentation.Games.PlanningPoker
             var player = Get.CurrentPlayer;
             string id = player.CurrentGame.Result.Id.ToString();
             await Groups.Add(Context.ConnectionId, id);
+
+            UpdateBoardState();
             
         }
 
@@ -65,13 +67,7 @@ namespace Cards.Presentation.Games.PlanningPoker
             Clients.Caller.newRound(roundState);
         }
 
-        private string GetStatus(PlanningPokerGame game, int? value)
-        {
-            if (game.EveryoneHasChosenCard)
-                return value.Value.ToString();
-
-            return value.HasValue ? "Card chosen" : "Pending";
-        }
+        
 
         private object GetBoardState(PlanningPokerGame currentGame)
         {
@@ -79,9 +75,7 @@ namespace Cards.Presentation.Games.PlanningPoker
             return
                 new
                 {
-                    Players =
-                        currentGame.ChosenCard.Select(
-                            i => new {Name = i.Item1, Status = GetStatus(currentGame, i.Item2)})
+                    Players = currentGame.ChosenCardList
                 };
         }
 
