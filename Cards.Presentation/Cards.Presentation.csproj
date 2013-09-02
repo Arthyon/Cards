@@ -151,6 +151,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Games\PlanningPoker\Objects\PlanningPokerCard.cs" />
+    <Compile Include="Games\PlanningPoker\Objects\PlanningPokerGameState.cs" />
+    <Compile Include="Games\PlanningPoker\Objects\PlanningPokerPlayerContext.cs" />
     <Compile Include="Messaging\Messages\GameCreatedMessage.cs" />
     <Compile Include="Messaging\Messages\PlayerJoinedMessage.cs" />
     <Compile Include="Controllers\ChooseNameController.cs" />

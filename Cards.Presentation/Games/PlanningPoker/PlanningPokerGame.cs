@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Cards.Lobby;
 using Cards.Lobby.GameComponents;
+using Cards.Presentation.Games.PlanningPoker.Objects;
 
 namespace Cards.Presentation.Games.PlanningPoker
 {
@@ -11,18 +11,19 @@ namespace Cards.Presentation.Games.PlanningPoker
     {
         public PlanningPokerGame(int maxPlayers) : base(GameTypes.PlanningPoker,"Planning Poker", maxPlayers)
         {
-            ChosenCard = new List<Tuple<Player, int?>>();
+            
+            PokerPlayerContexts = new List<PlanningPokerPlayerContext>();
         }
 
-        private List<Tuple<Player, int?>> ChosenCard { get; set; }
+        
 
-        public object ChosenCardList
+        private List<PlanningPokerPlayerContext> PokerPlayerContexts { get; set; }
+
+        public List<PlanningPokerPlayerInfo> PlayerInformation()
         {
-            get
-            {
-                return ChosenCard.Select(
-                    i => new {Name = i.Item1.Name, Status = GetStatus(i.Item2)});
-            }
+            
+                return PokerPlayerContexts.Select( i => new PlanningPokerPlayerInfo(i.Player, GetStatus(i.SelectedValue), i.CurrentRole)).ToList();
+            
         }
 
         private string GetStatus(int? value)
@@ -35,22 +36,40 @@ namespace Cards.Presentation.Games.PlanningPoker
 
         protected override void PlayerAdded(Player player)
         {
-            ChosenCard.Add(Tuple.Create<Player, int?>(player, null));
+            PokerPlayerContexts.Add(new PlanningPokerPlayerContext(player));
+        }
+
+        public PlanningPokerPlayerContext GetPokerPlayerContext(Player player)
+        {
+            return PokerPlayerContexts.First(list => list.Player.Identifier == player.Identifier);
+        }
+
+        public List<PlanningPokerPlayerContext> GetPokerPlayerContexts()
+        {
+            return PokerPlayerContexts;
         }
 
         public bool EveryoneHasChosenCard
         {
             get
             {
-                return ChosenCard.TrueForAll(i => i.Item2 != null);
+                return PokerPlayerContexts.TrueForAll(i => i.HasSelectedCard);
             }
         }
 
         public void PlayCard(Player player, int value)
         {
-            var tuple = ChosenCard.First(i => i.Item1 == player);
-            var index = ChosenCard.IndexOf(tuple);
-            ChosenCard[index] = Tuple.Create<Player, int?>(player, value);
+
+            GetPokerPlayerContext(player).SelectedValue = value;
+            
+        }
+
+        public void NewRound()
+        {
+            foreach (var player in PokerPlayerContexts)
+            {
+                player.NewRound();
+            }
         }
     }
 }

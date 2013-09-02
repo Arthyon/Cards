@@ -1,10 +1,18 @@
 ﻿@inherits System.Web.Mvc.WebViewPage<Cards.Presentation.Games.PlanningPoker.PlanningPokerGame>
          <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
 <div id="playingArea">
-    <div id="preGame">
-        
+    <div data-bind="visible: !gameStarted()">
+        Not Started yet
+        <ul data-bind="foreach: players">
+            <li><span data-bind="text: Name"></span> - <span data-bind="text: Role"></span></li>
+        </ul>
+        Role:<br />
+        <input type="radio" name="Role" value="Player" id="rolePlayer" data-bind="checked: inRole" /><label for="rolePlayer">Player</label>
+        <input type="radio" name="Role" value="Board" id="roleBoard" data-bind="checked: inRole" /><label for="roleBoard">Board</label>
+        <button data-bind="click: updateInformation">Update settings</button><br />
+        <button data-bind="click: startGame">Start</button>
     </div>
-    <div id="inGame">
+    <div data-bind="visible:gameStarted">
         <input type="checkbox" id="chkShowBoard" data-bind="checked: boardIsVisible" /><label for="chkShowBoard">Show board</label>
         <div id="board" data-bind="visible:boardIsVisible">
             <ul data-bind="foreach: players">
@@ -37,18 +45,37 @@
         function updateBoardState(boardState) {
             self.players(boardState.Players);
         }
+        function syncState(gameState) {
+            
+            self.cards(gameState.Cards);
+
+            updateBoardState(gameState.BoardState);
+            
+            if (gameState.InProgress && !self.gameStarted()) {
+                self.gameStarted(true);
+            }
+        }
+
 
         gametypeHub.client.boardStateUpdated = function (boardState) {
             updateBoardState(boardState);
         };
 
-        gametypeHub.client.newRound = function (roundState) {
-            self.cards(roundState.Cards);
-            
-            updateBoardState(roundState.BoardState);
+        gametypeHub.client.syncState = function (gameState) {
+            syncState(gameState);
         };
         
         // ------------- KO --------------
+        self.startGame = function() {
+            gametypeHub.server.startGame();
+        };
+
+        self.updateInformation = function() {
+            gametypeHub.server.updateInformation(self.inRole);
+        };
+
+        self.inRole = "Player";
+        self.gameStarted = ko.observable(false);
         self.boardIsVisible = ko.observable(true);
 
         self.cards = ko.observableArray();
@@ -70,11 +97,9 @@
             }
             
         };
-        
-        
-        $.connection.hub.start().done(function () {
-            gametypeHub.server.requestCurrentState();
-        });
+
+
+        $.connection.hub.start();
         
     };
 

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Cards.Lobby;
+using Cards.Lobby.GameComponents;
 using Cards.Lobby.LobbyComponents;
 using Cards.Lobby.User;
 using Cards.Presentation.Core;
@@ -32,6 +34,16 @@ namespace Cards.Presentation.Games.PlanningPoker
         {
         }
 
+        public void StartGame()
+        {
+            var game = CurrentPlayer.CurrentGame.Result;
+            if (game.Status == GameStatus.WaitingForPlayers)
+            {
+                game.StartGame();
+                NewRound();
+            }
+        }
+
         public override void CreateGame()
         {
             var tempGame = new PlanningPokerGame(5);
@@ -45,37 +57,38 @@ namespace Cards.Presentation.Games.PlanningPoker
             string id = player.CurrentGame.Result.Id.ToString();
             await Groups.Add(Context.ConnectionId, id);
 
-            UpdateBoardState();
+            NewRound();
+            
             
         }
 
         protected override void UserDisconnected()
         {
-           
+            
         }
 
         private void NewRound()
         {
-            var currentPlayer = Get.CurrentPlayerFromContext(Context);
-            var currentGame = currentPlayer.CurrentGame.Result as PlanningPokerGame;
+           
+            var currentGame = CurrentPlayer.CurrentGame.Result as PlanningPokerGame;
 
-            var roundState = new
+            var roundState = new PlanningPokerGameState()
             {
+                InProgress = currentGame.Status == GameStatus.InProgress,
                 Cards = _defaultHand,
                 BoardState = GetBoardState(currentGame)
             };
-            Clients.Caller.newRound(roundState);
+            Clients.Group(currentGame.Id.ToString()).syncState(roundState);
         }
 
         
 
-        private object GetBoardState(PlanningPokerGame currentGame)
+        private PlanningPokerBoardState GetBoardState(PlanningPokerGame currentGame)
         {
             
-            return
-                new
+            return new PlanningPokerBoardState
                 {
-                    Players = currentGame.ChosenCardList
+                    Players = currentGame.PlayerInformation()
                 };
         }
 
@@ -87,10 +100,7 @@ namespace Cards.Presentation.Games.PlanningPoker
             UpdateBoardState();
         }
 
-        public void RequestCurrentState()
-        {
-            NewRound();
-        }
+
 
         private void UpdateBoardState()
         {
@@ -99,5 +109,26 @@ namespace Cards.Presentation.Games.PlanningPoker
             Broadcast.Clients.Group(currentGame.Id.ToString())
                 .boardStateUpdated(GetBoardState(currentGame));
         }
+
+        public void UpdateInformation(string newRole)
+        {
+            PlanningPokerRole role;
+            switch (newRole)
+            {
+                case "Board":
+                    role = PlanningPokerRole.Board;
+                    break;
+                default:
+                    role = PlanningPokerRole.Player;
+                    break;
+            }
+
+            var currentGame = CurrentPlayer.CurrentGame.Result as PlanningPokerGame;
+            currentGame.GetPokerPlayerContext(CurrentPlayer).CurrentRole = role;
+
+            UpdateBoardState();
+        }
+
+
     }
 }
