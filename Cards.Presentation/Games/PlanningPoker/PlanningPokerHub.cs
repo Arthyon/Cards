@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Cards.Lobby;
-using Cards.Lobby.GameComponents;
-using Cards.Lobby.LobbyComponents;
+﻿using Cards.Lobby.LobbyComponents;
 using Cards.Lobby.User;
+using Cards.Messaging.Pipeline;
 using Cards.Presentation.Core;
+using Cards.Presentation.Games.PlanningPoker.Messaging.Events;
 using Cards.Presentation.Games.PlanningPoker.Objects;
 using Cards.Presentation.Lobby;
-using Cards.Presentation.Messaging.Pipeline;
 using Cards.Presentation.Messaging.Pipeline.Events;
 using Microsoft.AspNet.SignalR.Hubs;
 
@@ -17,49 +13,47 @@ namespace Cards.Presentation.Games.PlanningPoker
     [HubName(GameTypes.PlanningPoker)]
     public class PlanningPokerHub : GameTypeHubBase<PlanningPokerHub, PlanningPokerGame>
     {
-        private readonly List<PlanningPokerCard> _defaultHand = new List<PlanningPokerCard>
+        
+        public PlanningPokerHub(ILobby lobby, IUserManager userManager, IPipelineLocator pipelines) : base(lobby, userManager, pipelines)
         {
-            new PlanningPokerCard(1),
-            new PlanningPokerCard(2),
-            new PlanningPokerCard(3),
-            new PlanningPokerCard(5),
-            new PlanningPokerCard(8),
-            new PlanningPokerCard(13),
-            new PlanningPokerCard(20),
-            new PlanningPokerCard(40),
-            new PlanningPokerCard(100),
-        }; 
-
-        public PlanningPokerHub(ILobby lobby, IUserManager userManager, IPipelines pipelines) : base(lobby, userManager, pipelines)
-        {
+            
         }
 
+        /// <summary>
+        /// Called from client when setup phase is done, and administrator decides to start the game
+        /// </summary>
         public void StartGame()
         {
-            var game = CurrentPlayer.CurrentGame.Result;
-            if (game.Status == GameStatus.WaitingForPlayers)
-            {
-                game.StartGame();
-                NewRound();
-            }
+            Pipelines.Find<PokerGameStartedEvent>().Execute(
+                new PokerGameStartedEvent(
+                        hubContext: Broadcast, 
+                        game: CurrentGame, 
+                        currentPlayer:CurrentPlayer));
         }
 
+        /// <summary>
+        /// Called from the lobby when a player creates a new game
+        /// Creates the game with default settings which can be changed later in setup phase
+        /// </summary>
         public override void CreateGame()
         {
-            var tempGame = new PlanningPokerGame(5);
-
-            Pipelines.GameCreatedPipeline.Execute(new GameCreatedEvent(tempGame, Get.CurrentPlayer));
+            Pipelines.Find<GameCreatedEvent>().Execute(
+                new GameCreatedEvent(
+                    createdGame: new PlanningPokerGame(5), 
+                    gameOwner: Get.CurrentPlayer));
         }
 
-        protected override async void UserConnected()
+        /// <summary>
+        /// Called when a user connects to the game
+        /// </summary>
+        protected override void UserConnected()
         {
-            var player = Get.CurrentPlayer;
-            string id = player.CurrentGame.Result.Id.ToString();
-            await Groups.Add(Context.ConnectionId, id);
-
-            NewRound();
-            
-            
+            Pipelines.Find<PlayerJoinedPokerEvent>().Execute(
+               new PlayerJoinedPokerEvent(
+                   hubContext: Broadcast, 
+                   newConnectionId: Context.ConnectionId, 
+                   currentGame: CurrentGame, 
+                   currentPlayer: CurrentPlayer));
         }
 
         protected override void UserDisconnected()
@@ -67,49 +61,25 @@ namespace Cards.Presentation.Games.PlanningPoker
             
         }
 
-        private void NewRound()
-        {
-           
-            var currentGame = CurrentPlayer.CurrentGame.Result as PlanningPokerGame;
-
-            var roundState = new PlanningPokerGameState()
-            {
-                InProgress = currentGame.Status == GameStatus.InProgress,
-                Cards = _defaultHand,
-                BoardState = GetBoardState(currentGame)
-            };
-            Clients.Group(currentGame.Id.ToString()).syncState(roundState);
-        }
-
-        
-
-        private PlanningPokerBoardState GetBoardState(PlanningPokerGame currentGame)
-        {
-            
-            return new PlanningPokerBoardState
-                {
-                    Players = currentGame.PlayerInformation()
-                };
-        }
-
+        /// <summary>
+        /// Called when a user plays a card
+        /// </summary>
         public void PlayCard(int value)
         {
-            var currentPlayer = Get.CurrentPlayerFromContext(Context);
-            var currentGame = currentPlayer.CurrentGame.Result as PlanningPokerGame;
-            currentGame.PlayCard(currentPlayer, value);
-            UpdateBoardState();
+            Pipelines.Find<PlayerPlayedCardEvent>().Execute(new PlayerPlayedCardEvent(Broadcast, CurrentGame, CurrentPlayer, cardValue: value));
+            
+
         }
 
-
-
-        private void UpdateBoardState()
+        public void StartNewRound()
         {
-            var currentGame = Get.CurrentPlayerFromContext(Context).CurrentGame.Result as PlanningPokerGame;
-
-            Broadcast.Clients.Group(currentGame.Id.ToString())
-                .boardStateUpdated(GetBoardState(currentGame));
+            Pipelines.Find<PokerNewRoundStartedEvent>().Execute(new PokerNewRoundStartedEvent(Broadcast, CurrentGame, CurrentPlayer));
         }
 
+
+        /// <summary>
+        /// Called when a user updates his information. Currently restricted to changing to a new role
+        /// </summary>
         public void UpdateInformation(string newRole)
         {
             PlanningPokerRole role;
@@ -123,12 +93,8 @@ namespace Cards.Presentation.Games.PlanningPoker
                     break;
             }
 
-            var currentGame = CurrentPlayer.CurrentGame.Result as PlanningPokerGame;
-            currentGame.GetPokerPlayerContext(CurrentPlayer).CurrentRole = role;
-
-            UpdateBoardState();
+            Pipelines.Find<PlayerUpdatedInformationEvent>().Execute(new PlayerUpdatedInformationEvent(Broadcast, CurrentGame, CurrentPlayer, newRole: role));
         }
-
 
     }
 }

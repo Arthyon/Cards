@@ -1,6 +1,7 @@
 ﻿using Cards.Lobby.User;
 using Cards.Messaging.Core;
 using Cards.Messaging.Endpoints;
+using Cards.Messaging.Pipeline;
 using Cards.Presentation.Core;
 using Cards.Presentation.Messaging.Messages;
 using Cards.Presentation.Messaging.Pipeline;
@@ -12,7 +13,7 @@ namespace Cards.Presentation.Lobby
     [HubName("LobbyHub")]
     public class SignalRLobby : HubBase<SignalRLobby>, IMessageEndpoint
     {
-        public SignalRLobby(IUserManager userManager, IPipelines pipelines) : base(userManager, pipelines)
+        public SignalRLobby(IUserManager userManager, IPipelineLocator pipelines) : base(userManager, pipelines)
         {
         }
 

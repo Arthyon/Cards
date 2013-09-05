@@ -7,6 +7,8 @@ namespace Cards.Lobby.GameComponents
 {
     public abstract class Game
     {
+        public string GroupName { get { return Id.ToString(); } }
+
         public int MaxPlayers { get; protected set; }
         public int CurrentPlayers {get { return GetPlayers().Count; }}
         protected PlayerCollection PlayerCollection { get; set; }
@@ -14,6 +16,7 @@ namespace Cards.Lobby.GameComponents
         public Guid Id { get; private set; }
         public GameStatus Status { get; protected set; }
         public string GameType { get; protected set; }
+        public string GameName { get; protected set; }
 
         protected Game(string gameType, string displayName, int maxPlayers)
         {
@@ -23,8 +26,7 @@ namespace Cards.Lobby.GameComponents
             Id = Guid.NewGuid();
             Status = GameStatus.WaitingForPlayers;
             GameType = gameType;
-
-            
+            GameName = displayName;
         }
 
         public Maybe<Player> GetPlayer(string id)
@@ -57,10 +59,8 @@ namespace Cards.Lobby.GameComponents
 
         public bool StartGame()
         {
-           
                 Status = GameStatus.InProgress;
                 return true;
-           
         }
 
         public bool EndGame()
@@ -71,7 +71,6 @@ namespace Cards.Lobby.GameComponents
                 return true;
             }
             return false;
-
         }
         
     }

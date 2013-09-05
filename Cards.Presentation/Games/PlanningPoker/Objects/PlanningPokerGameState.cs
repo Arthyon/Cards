@@ -10,13 +10,18 @@ namespace Cards.Presentation.Games.PlanningPoker.Objects
     }
     public class PlanningPokerGameState
     {
+        
         public bool InProgress { get; set; }
+        
         public PlanningPokerBoardState BoardState { get; set; }
         public List<PlanningPokerCard> Cards { get; set; } 
     }
 
     public class PlanningPokerBoardState
     {
+        public bool RoundFinished { get; set; }
+        public bool GameContainsBoard { get; set; }
+        public List<PlanningPokerPlayerInfo> AllPlayers { get; set; } 
         public List<PlanningPokerPlayerInfo> Players { get; set; } 
     }
 
@@ -31,5 +36,19 @@ namespace Cards.Presentation.Games.PlanningPoker.Objects
         public string Role { get; set; }
         public string Name { get; private set; }
         public string Status { get; private set; }
+    }
+
+    public class CurrentPlayerStatus
+    {
+        public CurrentPlayerStatus(PlanningPokerPlayerContext player)
+        {
+            Role = player.CurrentRole.ToString();
+            IsPlayer = player.CurrentRole != PlanningPokerRole.Board;
+            ChosenCard = player.SelectedValue;
+        }
+        public string Role { get; private set; }
+
+        public bool IsPlayer { get; private set; }
+        public int? ChosenCard { get; private set; }
     }
 }

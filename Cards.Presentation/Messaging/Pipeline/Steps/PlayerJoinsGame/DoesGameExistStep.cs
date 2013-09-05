@@ -7,10 +7,12 @@ namespace Cards.Presentation.Messaging.Pipeline.Steps.PlayerJoinsGame
 {
     public class DoesGameExistStep
     {
-        public static void DoesGameExist(PlayerJoinedGameEvent ev)
+        public static bool DoesGameExist(PlayerJoinedGameEvent ev)
         {
             if (!ev.Game.IsSuccessful)
                 throw new NotFoundException("Game not found");
+
+            return true;
         }
     }
 }

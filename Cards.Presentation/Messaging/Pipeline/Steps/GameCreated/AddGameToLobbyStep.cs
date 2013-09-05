@@ -8,9 +8,11 @@ namespace Cards.Presentation.Messaging.Pipeline.Steps.GameCreated
 {
     public class AddGameToLobbyStep
     {
-        public static void AddGameToLobby(GameCreatedEvent msg)
+        public static bool AddGameToLobby(GameCreatedEvent msg)
         {
             Locate<ILobby>.Instance.StartGame(msg.CreatedGame);
+
+            return true;
         }
 
     }

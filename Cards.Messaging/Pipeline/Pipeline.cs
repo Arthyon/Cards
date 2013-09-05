@@ -6,14 +6,14 @@ namespace Cards.Messaging.Pipeline
 {
     public class Pipeline<T> where T : EventBase
     {
-        protected readonly List<Action<T>> Actions = new List<Action<T>>();
+        protected readonly List<Func<T, bool>> Actions = new List<Func<T, bool>>();
 
-        public void Execute(T input)
+        public virtual void Execute(T input)
         {
             Actions.ForEach(ac => ac(input));
         }
 
-        public Pipeline<T> Register(Action<T> action)
+        public Pipeline<T> Register(Func<T, bool> action)
         {
             Actions.Add(action);
             return this;

@@ -44,12 +44,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\IDispatchMessage.cs" />
+    <Compile Include="Core\MessagingInitializer.cs" />
     <Compile Include="Core\MessagingRegistry.cs" />
     <Compile Include="Dispatchers\BasicMessageDispatcher.cs" />
     <Compile Include="Dispatchers\IMessageDispatcher.cs" />
     <Compile Include="Endpoints\IMessageEndpoint.cs" />
     <Compile Include="Pipeline\EventBase.cs" />
+    <Compile Include="Pipeline\IPipelineLocator.cs" />
     <Compile Include="Pipeline\Pipeline.cs" />
+    <Compile Include="Pipeline\PipelineCollection.cs" />
+    <Compile Include="Pipeline\PipelineRegistry.cs" />
+    <Compile Include="Pipeline\StoppablePipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

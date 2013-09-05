@@ -6,6 +6,7 @@ using System.Web;
 using Cards.Lobby;
 using Cards.Lobby.Components;
 using Cards.Lobby.User;
+using Cards.Messaging.Pipeline;
 using Cards.Presentation.Messaging.Pipeline;
 using Cards.Presentation.Messaging.Pipeline.Events.PlayerEvents;
 using Microsoft.AspNet.SignalR;
@@ -19,11 +20,12 @@ namespace Cards.Presentation.Core
             new ConcurrentDictionary<string, Player>();
 
 
-        protected HubBase(IUserManager userManager, IPipelines pipelines)
+        protected HubBase(IUserManager userManager, IPipelineLocator pipelines)
         {
             Broadcast = GlobalHost.ConnectionManager.GetHubContext<T>();
             UserManager = userManager;
             Pipelines = pipelines;
+
         }
 
         protected IHubContext Broadcast { get; private set; }
@@ -31,11 +33,11 @@ namespace Cards.Presentation.Core
         
 
         protected IUserManager UserManager { get; private set; }
-        protected IPipelines Pipelines { get; private set; }
+        protected IPipelineLocator Pipelines { get; private set; }
 
         public override Task OnConnected()
         {
-            Pipelines.PlayerConnectedToHub.Execute(new PlayerConnectedToHubEvent(CurrentPlayer, ConnectedPlayers, Context.ConnectionId));
+            Pipelines.Find<PlayerConnectedToHubEvent>().Execute(new PlayerConnectedToHubEvent(CurrentPlayer, ConnectedPlayers, Context.ConnectionId));
             UserConnected();
             return base.OnConnected();
         }
@@ -45,7 +47,7 @@ namespace Cards.Presentation.Core
 
         public override Task OnDisconnected()
         {
-            Pipelines.PlayerDisconnectedFromHub.Execute(new PlayerDisconnectedFromHubEvent(CurrentPlayer, ConnectedPlayers));
+            Pipelines.Find<PlayerDisconnectedFromHubEvent>().Execute(new PlayerDisconnectedFromHubEvent(CurrentPlayer, ConnectedPlayers));
 
             UserDisconnected();
                 
@@ -56,8 +58,16 @@ namespace Cards.Presentation.Core
         {
             get
             {
+                if (Context == null)
+                    return Get.CurrentPlayer;
+
                 return Get.CurrentPlayerFromContext(Context);
             }
+        }
+
+        protected Maybe<TPlayerType> CurrentGamePlayer<TPlayerType>() where TPlayerType : Player
+        {
+            return CurrentPlayer as TPlayerType;
         }
 
     }

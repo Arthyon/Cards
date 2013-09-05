@@ -5,9 +5,10 @@ namespace Cards.Presentation.Messaging.Pipeline.Steps.PlayerDisconnectedFromHub
 {
     public class MarkPlayerAsOfflineStep
     {
-        public static void MarkPlayerAsOffline(PlayerDisconnectedFromHubEvent ev)
+        public static bool MarkPlayerAsOffline(PlayerDisconnectedFromHubEvent ev)
         {
             ev.Player.IsOnline = false;
+            return true;
         }
     }
 }

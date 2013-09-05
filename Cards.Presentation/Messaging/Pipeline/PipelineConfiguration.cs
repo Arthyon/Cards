@@ -8,45 +8,31 @@ using Cards.Presentation.Messaging.Pipeline.Steps.PlayerJoinsGame;
 
 namespace Cards.Presentation.Messaging.Pipeline
 {
-    public interface IPipelines
-    {
-        Pipeline<GameCreatedEvent> GameCreatedPipeline { get; }
-        Pipeline<PlayerJoinedGameEvent> PlayerJoinsGamePipeline { get; }
-        Pipeline<PlayerConnectedToHubEvent> PlayerConnectedToHub { get; } 
-        Pipeline<PlayerDisconnectedFromHubEvent> PlayerDisconnectedFromHub { get; } 
-    }
 
-    public class PipelineConfiguration : IPipelines
+
+    public class PipelineConfiguration : PipelineRegistry
     {
-        public PipelineConfiguration()
+        public override void Configure(PipelineCollection pipelines)
         {
-            GameCreatedPipeline = new Pipeline<GameCreatedEvent>()
+            pipelines.Add(new Pipeline<GameCreatedEvent>()
                 .Register(AddGameToLobbyStep.AddGameToLobby)
                 .Register(PlayerJoinsGameStep.PlayerJoinsGame)
-                .Register(BroadcastGameCreatedStep.BroadcastGameCreated);
+                .Register(BroadcastGameCreatedStep.BroadcastGameCreated));
 
-
-            PlayerJoinsGamePipeline = new Pipeline<PlayerJoinedGameEvent>()
+            pipelines.Add(new Pipeline<PlayerJoinedGameEvent>()
                 .Register(DoesGameExistStep.DoesGameExist)
                 .Register(PlayerJoinsGameStep.PlayerJoinsGame)
-                .Register(BroadcastPlayerJoinedMessageStep.BroadcastPlayerJoinedMessage);
+                .Register(BroadcastPlayerJoinedMessageStep.BroadcastPlayerJoinedMessage));
 
-
-            PlayerConnectedToHub = new Pipeline<PlayerConnectedToHubEvent>()
+            pipelines.Add(new Pipeline<PlayerConnectedToHubEvent>()
                 .Register(AddPlayerToCurrentPlayersStep.AddPlayerToCurrentPlayers)
                 .Register(MarkPlayerAsOnlineStep.MarkPlayerAsOnline)
-                .Register(AddConnectionIdToPlayerStep.AddConnectionIdToPlayer);
+                .Register(AddConnectionIdToPlayerStep.AddConnectionIdToPlayer));
 
-            PlayerDisconnectedFromHub = new Pipeline<PlayerDisconnectedFromHubEvent>()
+            pipelines.Add(new Pipeline<PlayerDisconnectedFromHubEvent>()
                 .Register(RemovePlayerFromCurrentPlayersStep.RemovePlayerFromCurrentPlayers)
-                .Register(MarkPlayerAsOfflineStep.MarkPlayerAsOffline);
+                .Register(MarkPlayerAsOfflineStep.MarkPlayerAsOffline));
+
         }
-
-        public Pipeline<GameCreatedEvent> GameCreatedPipeline { get; private set; }
-
-        public Pipeline<PlayerJoinedGameEvent> PlayerJoinsGamePipeline { get; private set; }
-
-        public Pipeline<PlayerConnectedToHubEvent> PlayerConnectedToHub { get; private set; }
-        public Pipeline<PlayerDisconnectedFromHubEvent> PlayerDisconnectedFromHub { get; private set; } 
     }
 }

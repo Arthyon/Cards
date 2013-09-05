@@ -1,5 +1,5 @@
 ﻿
-using Cards.Presentation.Messaging.Pipeline;
+using Cards.Messaging.Core;
 using Microsoft.AspNet.SignalR;
 using StructureMap;
 
@@ -24,13 +24,13 @@ namespace Cards.Presentation.Core
                         });
                     i.For<IDependencyResolver>().Singleton().Add<StructureMapDependencyResolver>();
                    
-                    i.For<IPipelines>().Singleton().Use<PipelineConfiguration>();
                 }
 
 
                 );
             GlobalHost.DependencyResolver = container.GetInstance<IDependencyResolver>();
             LocateBase.SetContainer(container);
+            MessagingInitializer.Initialize(container);
             
         }
     }

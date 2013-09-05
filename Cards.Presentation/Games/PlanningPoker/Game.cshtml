@@ -1,9 +1,10 @@
-﻿@inherits System.Web.Mvc.WebViewPage<Cards.Presentation.Games.PlanningPoker.PlanningPokerGame>
+﻿@using Cards.Presentation.Games.PlanningPoker.Objects
+@inherits System.Web.Mvc.WebViewPage<Cards.Presentation.Games.PlanningPoker.PlanningPokerGame>
          <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
 <div id="playingArea">
     <div data-bind="visible: !gameStarted()">
         Not Started yet
-        <ul data-bind="foreach: players">
+        <ul data-bind="foreach: allPlayers">
             <li><span data-bind="text: Name"></span> - <span data-bind="text: Role"></span></li>
         </ul>
         Role:<br />
@@ -13,22 +14,26 @@
         <button data-bind="click: startGame">Start</button>
     </div>
     <div data-bind="visible:gameStarted">
-        <input type="checkbox" id="chkShowBoard" data-bind="checked: boardIsVisible" /><label for="chkShowBoard">Show board</label>
-        <div id="board" data-bind="visible:boardIsVisible">
-            <ul data-bind="foreach: players">
-                <li><span data-bind="text:Name"></span> - <span data-bind="text:Status"></span></li>
-            </ul>
-        </div>
+        <span data-bind="visible: isPlayer">
+            <input type="checkbox" id="chkShowBoard" data-bind="checked: boardIsVisible" /><label for="chkShowBoard">Show board</label>
+        </span>
+            <div id="board" data-bind="visible:boardIsVisible">
+                <ul data-bind="foreach: players">
+                    <li><span data-bind="text:Name"></span> - <span data-bind="text:Status"></span></li>
+                </ul>
+                <button data-bind="visible: roundFinished, click: newRound">New round</button>
+            </div>
+            <div data-bind="visible: isPlayer">
+                <p data-bind="visible: !cardChosen()">Click a card to play it</p>
+                <p data-bind="visible: cardChosen">You chose <span data-bind="text: chosenCard"></span></p>
 
-        <p data-bind="visible: !cardChosen()">Click a card to play it</p>
-        <p data-bind="visible: cardChosen">You chose <span data-bind="text: chosenCard"></span></p>
-
-        <div id="hand">
-            <ul id="cards" data-bind="foreach: cards">
-                <li><span data-bind ="text: Value, click:$parent.playCard"></span></li>
-            </ul>
-        </div>
-    </div>
+                <div id="hand">
+                    <ul id="cards" data-bind="foreach: cards">
+                        <li><span data-bind="text: Value, click:$parent.playCard"></span></li>
+                    </ul>
+                </div>
+            </div>
+</div>
     
 
 </div>
@@ -40,65 +45,96 @@
     var Model = function() {
         var self = this;
         
-
-        // ---------- Signal R -----------
-        function updateBoardState(boardState) {
-            self.players(boardState.Players);
-        }
-        function syncState(gameState) {
-            
-            self.cards(gameState.Cards);
-
-            updateBoardState(gameState.BoardState);
-            
-            if (gameState.InProgress && !self.gameStarted()) {
-                self.gameStarted(true);
-            }
-        }
-
-
-        gametypeHub.client.boardStateUpdated = function (boardState) {
-            updateBoardState(boardState);
+        // --- GameState --- 
+        self.gameStarted = ko.observable(false);
+        self.roundFinished = ko.observable(false);
+        
+        self.players = ko.observableArray();
+        self.allPlayers = ko.observableArray();
+        
+        self.startGame = function () {
+            gametypeHub.server.startGame();
         };
 
+        self.newRound = function() {
+
+            gametypeHub.server.startNewRound();
+        };
+        
         gametypeHub.client.syncState = function (gameState) {
             syncState(gameState);
         };
         
-        // ------------- KO --------------
-        self.startGame = function() {
-            gametypeHub.server.startGame();
-        };
+        function syncState(gameState) {
 
-        self.updateInformation = function() {
-            gametypeHub.server.updateInformation(self.inRole);
-        };
+            self.cards(gameState.Cards);
 
-        self.inRole = "Player";
-        self.gameStarted = ko.observable(false);
-        self.boardIsVisible = ko.observable(true);
+            updateBoardState(gameState.BoardState);
 
+            if (gameState.InProgress && !self.gameStarted()) {
+                //Set board visible if:
+                //Current player is board
+                //or
+                //No board present
+                if (!self.isPlayer() || !gameState.BoardState.GameContainsBoard) {
+                    self.boardIsVisible(true);
+                }
+
+                self.gameStarted(true);
+            }
+        }
+        
+
+        // ---  Player ---
+        self.inRole = ko.observable("@PlanningPokerRole.Player.ToString()");
         self.cards = ko.observableArray();
-        self.players = ko.observableArray();
-
         self.cardChosen = ko.observable(false);
         self.chosenCard = ko.observable();
+        
+        self.isPlayer = ko.computed(function () {
+            return self.inRole() != "@PlanningPokerRole.Board.ToString()";
+        });
+        
+        self.updateInformation = function () {
+            gametypeHub.server.updateInformation(self.inRole());
+        };
+        
         
         self.playCard = function (card) {
             if (!self.cardChosen()) {
                 gametypeHub.server.playCard(card.Value).done(function () {
-                    
+
                     self.chosenCard(card.Value);
                     self.cardChosen(true);
-                    
+
                 }).fail(function () {
                     alert("Fail");
                 });
             }
-            
+
         };
+        
+        gametypeHub.client.updateClientState = function (currentPlayer) {
+            self.inRole(currentPlayer.Role);
+            self.chosenCard(currentPlayer.ChosenCard);
+            self.cardChosen(currentPlayer.ChosenCard != null);
+        };
+        
+        // --- Board --- 
+        self.boardIsVisible = ko.observable(false);
 
+        gametypeHub.client.boardStateUpdated = function (boardState) {
+            updateBoardState(boardState);
+        };
+        
+        function updateBoardState(boardState) {
+            self.allPlayers(boardState.AllPlayers);
+            self.roundFinished(boardState.RoundFinished);
 
+            self.players(boardState.Players);
+        }
+
+  
         $.connection.hub.start();
         
     };

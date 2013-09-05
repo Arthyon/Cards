@@ -30,7 +30,7 @@ namespace Cards.Lobby
             set { _game = value.Result; }
         }
 
-        private List<string> ConnectionIds { get; set; }
+        public List<string> ConnectionIds { get; set; }
 
         public bool OwnsConnectionId(string connectionId)
         {

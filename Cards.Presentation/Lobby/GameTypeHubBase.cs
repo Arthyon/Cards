@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Cards.Lobby;
 using Cards.Lobby.GameComponents;
 using Cards.Lobby.LobbyComponents;
 using Cards.Lobby.User;
+using Cards.Messaging.Pipeline;
 using Cards.Presentation.Core;
-using Cards.Presentation.Messaging.Pipeline;
 using Cards.Presentation.Messaging.Pipeline.Events;
 using Microsoft.AspNet.SignalR.Hubs;
 
@@ -17,7 +16,7 @@ namespace Cards.Presentation.Lobby
     {
         protected readonly ILobby Lobby;
 
-        protected GameTypeHubBase(ILobby lobby, IUserManager userManager, IPipelines pipelines) : base(userManager, pipelines)
+        protected GameTypeHubBase(ILobby lobby, IUserManager userManager, IPipelineLocator pipelines) : base(userManager, pipelines)
         {
             Lobby = lobby;
         }
@@ -27,9 +26,9 @@ namespace Cards.Presentation.Lobby
         public bool JoinGame(string id)
         {
             var game = Lobby.GetGame(Guid.Parse(id));
-            
 
-            Pipelines.PlayerJoinsGamePipeline.Execute(new PlayerJoinedGameEvent(game, Get.CurrentPlayer));
+
+            Pipelines.Find<PlayerJoinedGameEvent>().Execute(new PlayerJoinedGameEvent(game, Get.CurrentPlayer));
 
             return true;
         }
@@ -42,6 +41,21 @@ namespace Cards.Presentation.Lobby
                 return game.Result.GetPlayers().ToList();
             }
             return new List<Player>();
+        }
+
+        /// <summary>
+        /// Convenience method to get the current game
+        /// </summary>
+        protected TGame CurrentGame
+        {
+            get
+            {
+                var game = CurrentPlayer.CurrentGame.Result as TGame;
+                if (game == null)
+                    throw new Exception("Current game is not of correct type");
+
+                return game;
+            }
         }
 
         

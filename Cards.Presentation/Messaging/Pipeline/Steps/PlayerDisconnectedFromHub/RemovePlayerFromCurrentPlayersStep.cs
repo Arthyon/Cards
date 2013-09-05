@@ -6,11 +6,13 @@ namespace Cards.Presentation.Messaging.Pipeline.Steps.PlayerDisconnectedFromHub
 {
     public class RemovePlayerFromCurrentPlayersStep
     {
-        public static void RemovePlayerFromCurrentPlayers(PlayerDisconnectedFromHubEvent ev)
+        public static bool RemovePlayerFromCurrentPlayers(PlayerDisconnectedFromHubEvent ev)
         {
                 Player p;
                 if (!ev.CurrentPlayers.TryRemove(ev.Player.Identifier, out p))
                 throw new GameException("Couldn't remove player from current players");
+
+            return true;
         }
     }
 }
