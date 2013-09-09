@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cards.Messaging.Pipeline
 {
@@ -17,9 +18,14 @@ namespace Cards.Messaging.Pipeline
             _collection.Add(typeof(T),pipeline);
         }
 
-        Pipeline<T> IPipelineLocator.Find<T>()
+        public IEnumerable<PipelineBase> AllPipeLines()
         {
-            var type = typeof (T);
+            return _collection.Select(i => i.Value).Cast<PipelineBase>();
+        }
+
+        Pipeline<T> IPipelineLocator.FindFor<T>()
+        {
+            var type = typeof(T);
             object value;
             if (_collection.TryGetValue(type, out value))
             {
@@ -29,5 +35,17 @@ namespace Cards.Messaging.Pipeline
             }
             throw new Exception(string.Format("No pipeline configured for event: {0}", type.Name));
         }
+
+        TPipeline IPipelineLocator.Find<TPipeline>()
+        {
+            var pipeline = _collection.FirstOrDefault(i => i.Value is TPipeline);
+            
+            var specificPipeline = pipeline.Value as TPipeline;
+            if (specificPipeline != null)
+                return specificPipeline;
+
+            throw new Exception("Pipeline not of specified type");
+        }
+
     }
 }

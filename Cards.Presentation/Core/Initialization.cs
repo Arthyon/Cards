@@ -30,6 +30,7 @@ namespace Cards.Presentation.Core
                 );
             GlobalHost.DependencyResolver = container.GetInstance<IDependencyResolver>();
             LocateBase.SetContainer(container);
+
             MessagingInitializer.Initialize(container);
             
         }

@@ -52,6 +52,7 @@
     <Compile Include="Pipeline\EventBase.cs" />
     <Compile Include="Pipeline\IPipelineLocator.cs" />
     <Compile Include="Pipeline\Pipeline.cs" />
+    <Compile Include="Pipeline\PipelineBase.cs" />
     <Compile Include="Pipeline\PipelineCollection.cs" />
     <Compile Include="Pipeline\PipelineRegistry.cs" />
     <Compile Include="Pipeline\StoppablePipeline.cs" />

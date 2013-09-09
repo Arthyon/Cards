@@ -24,11 +24,13 @@ namespace Cards.Presentation.Games.PlanningPoker
         /// </summary>
         public void StartGame()
         {
-            Pipelines.Find<PokerGameStartedEvent>().Execute(
+            var pipeline = Pipelines.Find<StoppablePipeline<PokerGameStartedEvent>>();
+            pipeline.Execute(
                 new PokerGameStartedEvent(
                         hubContext: Broadcast, 
                         game: CurrentGame, 
                         currentPlayer:CurrentPlayer));
+            
         }
 
         /// <summary>
@@ -37,9 +39,9 @@ namespace Cards.Presentation.Games.PlanningPoker
         /// </summary>
         public override void CreateGame()
         {
-            Pipelines.Find<GameCreatedEvent>().Execute(
+            Pipelines.FindFor<GameCreatedEvent>().Execute(
                 new GameCreatedEvent(
-                    createdGame: new PlanningPokerGame(5), 
+                    createdGame: new PlanningPokerGame(2), 
                     gameOwner: Get.CurrentPlayer));
         }
 
@@ -48,7 +50,7 @@ namespace Cards.Presentation.Games.PlanningPoker
         /// </summary>
         protected override void UserConnected()
         {
-            Pipelines.Find<PlayerJoinedPokerEvent>().Execute(
+            Pipelines.FindFor<PlayerJoinedPokerEvent>().Execute(
                new PlayerJoinedPokerEvent(
                    hubContext: Broadcast, 
                    newConnectionId: Context.ConnectionId, 
@@ -66,34 +68,24 @@ namespace Cards.Presentation.Games.PlanningPoker
         /// </summary>
         public void PlayCard(int value)
         {
-            Pipelines.Find<PlayerPlayedCardEvent>().Execute(new PlayerPlayedCardEvent(Broadcast, CurrentGame, CurrentPlayer, cardValue: value));
+            Pipelines.FindFor<PlayerPlayedCardEvent>().Execute(new PlayerPlayedCardEvent(Broadcast, CurrentGame, CurrentPlayer, cardValue: value));
             
 
         }
 
         public void StartNewRound()
         {
-            Pipelines.Find<PokerNewRoundStartedEvent>().Execute(new PokerNewRoundStartedEvent(Broadcast, CurrentGame, CurrentPlayer));
+            Pipelines.FindFor<PokerNewRoundStartedEvent>().Execute(new PokerNewRoundStartedEvent(Broadcast, CurrentGame, CurrentPlayer));
         }
 
 
         /// <summary>
         /// Called when a user updates his information. Currently restricted to changing to a new role
         /// </summary>
-        public void UpdateInformation(string newRole)
+        public void UpdateInformation(PlanningPokerRole newRole)
         {
-            PlanningPokerRole role;
-            switch (newRole)
-            {
-                case "Board":
-                    role = PlanningPokerRole.Board;
-                    break;
-                default:
-                    role = PlanningPokerRole.Player;
-                    break;
-            }
-
-            Pipelines.Find<PlayerUpdatedInformationEvent>().Execute(new PlayerUpdatedInformationEvent(Broadcast, CurrentGame, CurrentPlayer, newRole: role));
+           
+            Pipelines.FindFor<PlayerUpdatedInformationEvent>().Execute(new PlayerUpdatedInformationEvent(Broadcast, CurrentGame, CurrentPlayer, newRole: newRole));
         }
 
     }

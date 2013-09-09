@@ -19,7 +19,7 @@ namespace Cards.Presentation.Messaging.Pipeline
                 .Register(PlayerJoinsGameStep.PlayerJoinsGame)
                 .Register(BroadcastGameCreatedStep.BroadcastGameCreated));
 
-            pipelines.Add(new Pipeline<PlayerJoinedGameEvent>()
+            pipelines.Add(new StoppablePipeline<PlayerJoinedGameEvent>()
                 .Register(DoesGameExistStep.DoesGameExist)
                 .Register(PlayerJoinsGameStep.PlayerJoinsGame)
                 .Register(BroadcastPlayerJoinedMessageStep.BroadcastPlayerJoinedMessage));

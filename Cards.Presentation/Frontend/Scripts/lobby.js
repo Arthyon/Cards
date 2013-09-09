@@ -23,17 +23,26 @@
     $("#playerCount").text(newNumber);
   };
 
+  hub.client.gameStarted = function (gameId) {
+    $("#" + gameId).remove();
+  };
+    
+  
+
   function joinGame(id, type) {
     var gametypeHub = $.connection[type];
-    
+
+
     gametypeHub.server.joinGame(id)
       .done(function () {
         window.location.href = "/Home/Game";
       })
-      .fail(function () {
-        alert("failed");
-      });
+    .fail(function(e) {
+        alert(e);
+    });
   }
+    
+ 
 
   $.connection.hub.start().done(function () {
     $.getJSON(apiUrl + "GetAvailableGameTypes")

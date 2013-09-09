@@ -37,7 +37,7 @@ namespace Cards.Presentation.Core
 
         public override Task OnConnected()
         {
-            Pipelines.Find<PlayerConnectedToHubEvent>().Execute(new PlayerConnectedToHubEvent(CurrentPlayer, ConnectedPlayers, Context.ConnectionId));
+            Pipelines.FindFor<PlayerConnectedToHubEvent>().Execute(new PlayerConnectedToHubEvent(CurrentPlayer, ConnectedPlayers, Context.ConnectionId));
             UserConnected();
             return base.OnConnected();
         }
@@ -47,7 +47,7 @@ namespace Cards.Presentation.Core
 
         public override Task OnDisconnected()
         {
-            Pipelines.Find<PlayerDisconnectedFromHubEvent>().Execute(new PlayerDisconnectedFromHubEvent(CurrentPlayer, ConnectedPlayers));
+            Pipelines.FindFor<PlayerDisconnectedFromHubEvent>().Execute(new PlayerDisconnectedFromHubEvent(CurrentPlayer, ConnectedPlayers));
 
             UserDisconnected();
                 

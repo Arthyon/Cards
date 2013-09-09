@@ -20,9 +20,15 @@ namespace Cards.Presentation.Messaging.Pipeline.Steps.GameCreated
 
         private static bool Process(Game game, Player player)
         {
-            player.CurrentGame = game;
-            game.AddPlayer(player);
-            return true;
+            var result = game.AddPlayer(player);
+            if (result.IsSuccessful)
+            {
+                player.CurrentGame = game;
+
+                return true;
+            }
+            return false;
+
         }
     }
 }

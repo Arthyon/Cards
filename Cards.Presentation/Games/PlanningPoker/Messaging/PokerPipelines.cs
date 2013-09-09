@@ -1,6 +1,7 @@
 ﻿using Cards.Messaging.Pipeline;
 using Cards.Presentation.Games.PlanningPoker.Messaging.Events;
 using Cards.Presentation.Games.PlanningPoker.Messaging.Steps;
+using Cards.Presentation.Messaging.Pipeline.Steps;
 
 namespace Cards.Presentation.Games.PlanningPoker.Messaging
 {
@@ -8,6 +9,7 @@ namespace Cards.Presentation.Games.PlanningPoker.Messaging
     {
         public override void Configure(PipelineCollection pipelines)
         {
+            
             pipelines.Add(new Pipeline<PlayerJoinedPokerEvent>()
                 .Register(AddConnectionIdToGameGroupStep.AddConnectionIdToGameGroup)
                 .Register(BroadcastOwnStateToPlayerStep.BroadcastOwnStateToPlayer)
@@ -16,7 +18,8 @@ namespace Cards.Presentation.Games.PlanningPoker.Messaging
             pipelines.Add(new StoppablePipeline<PokerGameStartedEvent>()
                 .Register(CanGameStartStep.CanGameStart)
                 .Register(StartPokerGameStep.StartPokerGame)
-                .Register(BroadcastUpdatedGameStateStep.BroadcastUpdatedGameState));
+                .Register(BroadcastUpdatedGameStateStep.BroadcastUpdatedGameState)
+                .Register(SendGameStartedMessageStep.SendGameStartedMessage));
 
             pipelines.Add(new Pipeline<PlayerPlayedCardEvent>()
                 .Register(PlayCardForPlayerStep.PlayCardForPlayer)

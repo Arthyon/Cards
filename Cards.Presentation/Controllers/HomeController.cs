@@ -1,4 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Web.Mvc;
+using Cards.Messaging.Pipeline;
 using Cards.Presentation.Core;
 
 namespace Cards.Presentation.Controllers
@@ -15,6 +19,13 @@ namespace Cards.Presentation.Controllers
         {
             var game = Get.CurrentPlayer.CurrentGame;
             return game.IsSuccessful ? View(game.Result) : View("Error");
+        }
+
+        public ActionResult Documentation()
+        {
+            var pipelineDocumentations = Locate<IPipelineLocator>.Instance.AllPipeLines().Select(pipelines => pipelines.WhatDoIDo().Replace("\n", "<br />")).ToList();
+
+            return View(pipelineDocumentations);
         }
     }
 }

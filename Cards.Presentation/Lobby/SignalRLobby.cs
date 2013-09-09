@@ -4,7 +4,6 @@ using Cards.Messaging.Endpoints;
 using Cards.Messaging.Pipeline;
 using Cards.Presentation.Core;
 using Cards.Presentation.Messaging.Messages;
-using Cards.Presentation.Messaging.Pipeline;
 using Microsoft.AspNet.SignalR.Hubs;
 
 
@@ -29,6 +28,11 @@ namespace Cards.Presentation.Lobby
             if (playerJoinedMessage != null)
             {
                 Broadcast.Clients.All.updatePlayerCount(playerJoinedMessage.Game.Id, playerJoinedMessage.Game.CurrentPlayers);
+            }
+            var gameUpdatedMessage = message as GameStartedMessage;
+            if (gameUpdatedMessage != null)
+            {
+                Broadcast.Clients.All.gameStarted(gameUpdatedMessage.Game.Id);
             }
 
             return false;

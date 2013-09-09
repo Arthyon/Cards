@@ -23,15 +23,22 @@ namespace Cards.Presentation.Lobby
 
         public abstract void CreateGame();
 
-        public bool JoinGame(string id)
+        public void JoinGame(string id)
         {
             var game = Lobby.GetGame(Guid.Parse(id));
 
 
-            Pipelines.Find<PlayerJoinedGameEvent>().Execute(new PlayerJoinedGameEvent(game, Get.CurrentPlayer));
-
-            return true;
+            var pipeline = Pipelines.Find<StoppablePipeline<PlayerJoinedGameEvent>>();
+            pipeline.Execute(new PlayerJoinedGameEvent(game, Get.CurrentPlayer));
+            if (pipeline.Stopped)
+            {
+                //TODO Get message from pipeline
+                throw new ClientFeedbackException("Maximum players reached");
+            }
+          
         }
+
+
 
         public List<Player> PlayersInGame()
         {

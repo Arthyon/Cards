@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Cards.Messaging.Pipeline
 {
-    public class Pipeline<T> where T : EventBase
+    public class Pipeline<T> : PipelineBase where T : EventBase
     {
         protected readonly List<Func<T, bool>> Actions = new List<Func<T, bool>>();
 
@@ -19,10 +19,12 @@ namespace Cards.Messaging.Pipeline
             return this;
         }
 
-        public string WhatDoIDo()
+
+        public override string WhatDoIDo()
         {
+            
             var sb = new StringBuilder();
-            sb.AppendFormat("When {0}:", typeof (T).Name.Replace("Event", ""));
+            sb.AppendFormat("When {0}:", typeof(T).Name.Replace("Event", ""));
 
             foreach (var action in Actions)
             {
@@ -38,6 +40,7 @@ namespace Cards.Messaging.Pipeline
 
             }
             return sb.ToString();
+            
         }
     }
 }
